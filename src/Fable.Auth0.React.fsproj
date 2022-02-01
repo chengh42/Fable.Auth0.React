@@ -5,7 +5,7 @@
     <Description>Fable library for Auth0.React</Description>
     <RepositoryUrl>https://github.com/chengh42/Fable.Auth0.React.git</RepositoryUrl>
     <PackageProjectUrl>https://github.com/chengh42/Fable.Auth0.React</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/chengh42/Fable.Auth0.React/blob/main/LICENSE</PackageLicenseUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageTags>fsharp;fable;react;auth0</PackageTags>
     <Authors>Hsin Cheng</Authors>
     <Version>0.1.0</Version>
@@ -29,6 +29,7 @@
     <Compile Include="UseAuth0.fs" />
     <Compile Include="Auth0.React.fs" />
     <None Include="paket.references" />
+    <None Include="..\LICENSE" Pack="true" PackagePath=""/>
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>
