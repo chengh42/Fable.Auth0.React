@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <PackageId>Fable.Auth0.React</PackageId>
     <Description>Fable library for Auth0.React</Description>
     <RepositoryUrl>https://github.com/chengh42/Fable.Auth0.React.git</RepositoryUrl>
     <PackageProjectUrl>https://github.com/chengh42/Fable.Auth0.React</PackageProjectUrl>
