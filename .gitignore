@@ -1,0 +1,7 @@
+.fable/
+.ionide/
+bin/
+obj/
+paket-files/
+node_modules/
+dist/tests/

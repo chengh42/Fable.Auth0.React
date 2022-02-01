@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Fable library for Auth0.React</Description>
+    <RepositoryUrl>https://github.com/chengh42/Fable.Auth0.React.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/chengh42/Fable.Auth0.React</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/chengh42/Fable.Auth0.React/blob/main/LICENSE</PackageLicenseUrl>
+    <PackageTags>fsharp;fable;react;auth0</PackageTags>
+    <Authors>Hsin Cheng</Authors>
+    <Version>0.1.0</Version>
+    <TargetFramework>net6.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="*.fsproj; *.fs; *.js;" Exclude="**\*.fs.js" PackagePath="fable\" />
+    <Compile Include="Library.fs" />
+    <None Include="paket.references" />
+  </ItemGroup>
+  <Import Project="..\.paket\Paket.Restore.targets" />
+</Project>
