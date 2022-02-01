@@ -11,9 +11,22 @@
     <TargetFramework>net6.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <NpmDependencies>
+      <NpmPackage Name="@auth0/auth0-react" Version="gte 1.9.0 lt 1.9.0" DevDependency="true" />
+    </NpmDependencies>
+  </PropertyGroup>
   <ItemGroup>
     <Content Include="*.fsproj; *.fs; *.js;" Exclude="**\*.fs.js" PackagePath="fable\" />
-    <Compile Include="Library.fs" />
+    <Compile Include="Global.fs" />
+    <Compile Include="Errors.fs" />
+    <Compile Include="AuthState.fs" />
+    <Compile Include="Auth0Context.fs" />
+    <Compile Include="Auth0Provider.fs" />
+    <Compile Include="WithAuthenticationRequired.fs" />
+    <Compile Include="WithAuth0.fs" />
+    <Compile Include="UseAuth0.fs" />
+    <Compile Include="Auth0.React.fs" />
     <None Include="paket.references" />
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
