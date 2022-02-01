@@ -5,10 +5,8 @@ open Fable.Auth0.React
 
 let all =
     testList "Example tests" [
-
         testCase "say hi" <| fun () ->
-            Expect.equal (Say.hello "John") "Hello John" "say hi works"
-
+            Expect.notEqual typeof<string> typeof<Auth0ContextInterface> "type Auth0ContextInterface"
     ]
 
 [<EntryPoint>]
