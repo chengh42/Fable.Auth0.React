@@ -1,4 +1,4 @@
-# Fable.Auth0.React
+# Fable.Auth0.React ![Nuget](https://img.shields.io/nuget/v/Fable.Auth0.React)
 
 Fable library for [@auth0/auth0-react](https://github.com/auth0/auth0-react), the Auth0 SDK for React Single Page Applications (SPA).
 
