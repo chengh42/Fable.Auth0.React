@@ -4,6 +4,7 @@
     "test": "mocha dist/tests"
   },
   "devDependencies": {
+    "@auth0/auth0-react": "^1.9.0",
     "fable-splitter": "^2.2.1",
     "mocha": "^9.2.0"
   }
