@@ -6,8 +6,9 @@ Fable library for [@auth0/auth0-react](https://github.com/auth0/auth0-react), th
 
 ```bash
 # docs
-npm start
-npm run build
+yarn install --frozen-lockfile
+yarn start
+yarn build
 
 # pack
 dotnet pack -c Release src/Fable.Auth0.React

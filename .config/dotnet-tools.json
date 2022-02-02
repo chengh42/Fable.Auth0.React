@@ -1,17 +1,11 @@
 {
-  "version": 1,
-  "isRoot": true,
-  "tools": {
-    "paket": {
-      "version": "6.2.1",
-      "commands": [
-        "paket"
-      ]
-    },
-    "fable": {
-        "version": "3.6.2",
+    "version": 1,
+    "isRoot": true,
+    "tools": {
+      "paket": {
+        "version": "6.2.1",
         "commands": [
-          "fable"
+          "paket"
         ]
       },
       "femto": {
@@ -19,6 +13,12 @@
         "commands": [
           "femto"
         ]
+      },
+      "fable": {
+        "version": "3.6.2",
+        "commands": [
+          "fable"
+        ]
       }
+    }
   }
-}
