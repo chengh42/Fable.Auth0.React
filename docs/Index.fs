@@ -31,6 +31,44 @@ let auth0App (children: seq<ReactElement>) =
                redirectUri = "http://localhost:8080" |}
     Auth0Provider opts children
 
+[<ReactComponent>]
+let ProfileBox () =
+    let ctxAuth0 = useAuth0 ()
+    let handleLoginWithRedirect _ =
+        let opts = unbox<RedirectLoginOptions> null
+
+        ctxAuth0.loginWithRedirect opts
+        |> Async.AwaitPromise
+        |> Async.StartImmediate
+
+    if not ctxAuth0.isAuthenticated then
+        Mui.button [
+            button.color.primary
+            button.variant.contained
+            prop.onClick handleLoginWithRedirect
+            prop.text "Login with Auth0"
+        ]
+    else
+        let username, picture =
+            match ctxAuth0.user with
+            | Some u ->
+                sprintf "%A" u.name,
+                sprintf "%A" u.picture
+            | None -> "", ""
+        Mui.button [
+            button.color.inherit'
+            button.size.large
+            button.startIcon (
+                Mui.avatar [
+                    avatar.alt username
+                    avatar.src picture
+                ]
+            )
+            button.children (
+                Html.h4 username
+            )
+        ]
+
 let topBar =
     Mui.container [
         Mui.toolbar [
@@ -43,25 +81,9 @@ let topBar =
                     button.color.inherit'
                     prop.children [ Mdi.gitHubIcon [] ]
                 ]
+                ProfileBox ()
             ]
         ]
-    ]
-
-[<ReactComponent>]
-let LoginBtn () =
-    let ctxAuth0 = useAuth0 ()
-    let handleLoginWithRedirect _ =
-        let opts = unbox<RedirectLoginOptions> null
-
-        ctxAuth0.loginWithRedirect opts
-        |> Async.AwaitPromise
-        |> Async.StartImmediate
-
-    Mui.button [
-        button.color.primary
-        button.variant.contained
-        prop.onClick handleLoginWithRedirect
-        prop.text "Login with Auth0"
     ]
 
 let view (model: Model) (dispatch: Msg -> unit) =
@@ -86,7 +108,6 @@ let view (model: Model) (dispatch: Msg -> unit) =
                     Html.span ", the Auth0 SDK for React Single Page Applications (SPA)."
                 ]
                 Html.p "Note: Still a work-in-progress!"
-                LoginBtn ()
             ]
         ]
     ]
