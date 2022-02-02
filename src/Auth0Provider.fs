@@ -22,7 +22,8 @@ open Fable.Core.JsInterop
 /// Provides the Auth0Context to its child components.
 [<Import("Auth0Provider","@auth0/auth0-react")>] 
 let Auth0Provider (opts : Auth0ProviderOptions) children : ReactElement =
-    let propsObject = keyValueList CaseRules.LowerFirst opts
+    let optEntries = opts |> JS.Constructors.Object.entries
+    let propsObject = keyValueList CaseRules.LowerFirst optEntries
     ofImport "Auth0Provider" "@auth0/auth0-react" propsObject children
 
 /// The state of the application before the user was redirected to the login page.
@@ -31,10 +32,7 @@ type [<AllowNullLiteral>] AppState =
     [<Emit "$0[$1]{{=$2}}">] abstract Item: key: string -> obj option with get, set
 
 /// The main configuration to instantiate the `Auth0Provider`.
-type Auth0ProviderOptions = seq<IAuth0ProviderOptions>
-
-/// The main configuration to instantiate the `Auth0Provider`.
-type [<AllowNullLiteral>] IAuth0ProviderOptions =
+type [<AllowNullLiteral>] Auth0ProviderOptions =
     /// The child nodes your Provider has wrapped
     abstract children: ReactElement option with get, set
     /// By default this removes the code and state parameters from the url when you are redirected from the authorize page.
