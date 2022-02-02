@@ -1,19 +1,18 @@
 source https://api.nuget.org/v3/index.json
-
+framework: net5.0, netstandard2.0
 storage: none
-framework: net6.0, netstandard2.0
-nuget Fable.Browser.Dom
-nuget Fable.Core
-nuget Fable.React
-nuget Fable.Promise
-nuget FSharp.Core
 
-nuget Feliz
-nuget Feliz.DaisyUI
-nuget Feliz.Router
-nuget Feliz.UseElmish
+nuget Fable.Core
 nuget Fable.Elmish
 nuget Fable.Elmish.React
 nuget Fable.Elmish.Debugger
-nuget Fable.Elmish.HMR
-nuget FsToolkit.ErrorHandling.TaskResult
+nuget Fable.Elmish.HMR == 4.1 // https://github.com/elmish/hmr/issues/35
+nuget Fable.MaterialUI.Icons
+nuget Fable.React
+nuget Feliz
+nuget Feliz.MaterialUI
+nuget Feliz.Router
+
+nuget Fake.Core.Target
+nuget Fake.IO.FileSystem
+nuget Farmer

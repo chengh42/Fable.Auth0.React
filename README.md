@@ -5,10 +5,12 @@ Fable library for [@auth0/auth0-react](https://github.com/auth0/auth0-react), th
 ## Development
 
 ```bash
+# for first time use
+dotnet tool restore
+
 # docs
-yarn install --frozen-lockfile
-yarn start
-yarn build
+dotnet run
+dotnet run bundle
 
 # pack
 dotnet pack -c Release src/Fable.Auth0.React

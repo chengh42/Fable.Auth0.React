@@ -8,11 +8,11 @@ open Elmish.Debug
 open Elmish.HMR
 #endif
 
-Program.mkProgram View.init View.update View.AppView
+Program.mkSimple Index.init Index.update Index.view
 #if DEBUG
 |> Program.withConsoleTrace
 #endif
-|> Program.withReactSynchronous "safer-app"
+|> Program.withReactSynchronous "root"
 #if DEBUG
 |> Program.withDebugger
 #endif
