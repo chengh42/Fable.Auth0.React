@@ -1,9 +1,9 @@
 {
     "private": true,
     "scripts": {
-        "prebuild": "dotnet fable clean --yes docs",
-        "start": "dotnet fable watch --cwd docs -o output -s --run webpack-dev-server",
-        "build": "dotnet fable --cwd docs -o output -s --run webpack -p"
+        "start": "webpack-dev-server",
+        "build": "webpack -p",
+        "test:live": "webpack-dev-server --config webpack.tests.config.js"
     },
     "devDependencies": {
         "copy-webpack-plugin": "^6.1.0",
@@ -21,8 +21,5 @@
         "webpack": "^4.41.2",
         "webpack-cli": "^3.3.9",
         "webpack-dev-server": "^3.8.2"
-    },
-    "dependencies": {
-        "@auth0/auth0-react": "^1.9.0"
     }
 }

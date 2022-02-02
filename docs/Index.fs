@@ -7,7 +7,6 @@ type Model = { Input: string }
 type Msg =
     | AddTodo
 
-
 let init () : Model * Cmd<Msg> =
     let model = { Input = "" }
 
@@ -21,6 +20,7 @@ let update (msg: Msg) (model: Model) : Model * Cmd<Msg> =
         model, Cmd.none
 
 open Feliz
+open Feliz.DaisyUI
 
 let view (model: Model) (dispatch: Msg -> unit) =
     Html.div [
