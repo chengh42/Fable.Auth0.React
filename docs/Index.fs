@@ -44,39 +44,43 @@ let ProfileBox () =
         let opts = unbox<LogoutOptions> {| returnTo = "http://localhost:8080" |}
         ctxAuth0.logout opts
 
-    Mui.container [
-        if not ctxAuth0.isAuthenticated then
-            Mui.button [
-                button.color.secondary
-                button.variant.contained
-                prop.onClick handleLoginWithRedirect
-                prop.text "Login with Auth0"
-            ]
-        else
-            let username, picture =
-                match ctxAuth0.user with
-                | Some u ->
-                    sprintf "%A" u.name,
-                    sprintf "%A" u.picture
-                | None -> "", ""
-            Mui.button [
-                button.color.inherit'
-                button.size.large
-                button.startIcon (
-                    Mui.avatar [
-                        avatar.alt username
-                        avatar.src picture
-                    ]
-                )
-                button.endIcon (
-                    Mdi.exitToAppIcon [ ]
-                )
-                button.children (
-                    Html.h4 username
-                )
-                prop.onClick handleLogoutWithRedirect
-            ]
-    ]
+    if not ctxAuth0.isAuthenticated then
+        Mui.button [
+            button.color.secondary
+            button.variant.contained
+            prop.onClick handleLoginWithRedirect
+            prop.text "Login with Auth0"
+        ]
+    else
+        let username, picture =
+            match ctxAuth0.user with
+            | Some u ->
+                sprintf "%A" u.name,
+                sprintf "%A" u.picture
+            | None -> "", ""
+        Mui.tooltip [
+            tooltip.title "Click to logout"
+            tooltip.arrow true
+            tooltip.children (
+                Mui.button [
+                    button.color.inherit'
+                    button.size.large
+                    button.startIcon (
+                        Mui.avatar [
+                            avatar.alt username
+                            avatar.src picture
+                        ]
+                    )
+                    button.endIcon (
+                        Mdi.exitToAppIcon [ ]
+                    )
+                    button.children (
+                        Html.h4 username
+                    )
+                    prop.onClick handleLogoutWithRedirect
+                ]
+            )
+        ]
 
 
 let topBar =
