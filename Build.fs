@@ -1,7 +1,5 @@
 open Fake.Core
 open Fake.IO
-open Farmer
-open Farmer.Builders
 
 open Helpers
 
