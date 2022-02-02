@@ -41,7 +41,8 @@ let ProfileBox () =
         |> Async.AwaitPromise
         |> Async.StartImmediate
     let handleLogoutWithRedirect _ =
-        let opts = unbox<LogoutOptions> {| returnTo = "http://localhost:8080" |}
+        let returnTo = Browser.Dom.window.location.origin
+        let opts = unbox<LogoutOptions> {| returnTo = returnTo |}
         ctxAuth0.logout opts
 
     if not ctxAuth0.isAuthenticated then
@@ -88,7 +89,12 @@ let topBar =
         Mui.toolbar [
             toolbar.variant.dense
             toolbar.children [
-                Html.h1 "Fable.Auth0.React"
+                Html.div [
+                    prop.style [ style.flexGrow 1 ]
+                    prop.children [
+                        Html.h1 "Fable.Auth0.React"
+                    ]
+                ]
                 Mui.button [
                     button.href "https://github.com/chengh42/Fable.Auth0.React"
                     button.size.large
