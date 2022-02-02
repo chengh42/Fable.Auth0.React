@@ -20,10 +20,8 @@ open Fable.Core.JsInterop
 /// ```
 ///
 /// Provides the Auth0Context to its child components.
-[<Import("Auth0Provider","@auth0/auth0-react")>] 
 let Auth0Provider (opts : Auth0ProviderOptions) children : ReactElement =
-    let optEntries = opts |> JS.Constructors.Object.entries
-    let propsObject = keyValueList CaseRules.LowerFirst optEntries
+    let propsObject = opts |> JS.Constructors.Object.entries |> createObj
     ofImport "Auth0Provider" "@auth0/auth0-react" propsObject children
 
 /// The state of the application before the user was redirected to the login page.
