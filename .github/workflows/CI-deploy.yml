@@ -21,6 +21,9 @@ jobs:
       - name: Install Tools
         run: dotnet tool restore
 
+      - name: Install npm dependencies
+        run: yarn install
+
       - name: Build
         run: yarn build
 
