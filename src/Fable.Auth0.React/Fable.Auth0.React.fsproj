@@ -21,7 +21,6 @@
     </NpmDependencies>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="*.fsproj; *.fs; *.js;" Exclude="**\*.fs.js" PackagePath="fable\" />
     <Compile Include="Global.fs" />
     <Compile Include="Errors.fs" />
     <Compile Include="AuthState.fs" />
@@ -33,6 +32,9 @@
     <Compile Include="Auth0.React.fs" />
     <None Include="paket.references" />
     <None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="*.fsproj; *.fs; *.js;" Exclude="**\*.fs.js" PackagePath="fable\" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
