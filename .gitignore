@@ -5,6 +5,6 @@ obj/
 paket-files/
 fable_modules/
 node_modules/
-dist/tests/
+**/dist/
 **/*.fs.js
 **/*.fs.js.map
