@@ -13,5 +13,5 @@ dotnet run
 dotnet run bundle
 
 # pack
-dotnet pack -c Release src/Fable.Auth0.React
+dotnet run pack
 ```

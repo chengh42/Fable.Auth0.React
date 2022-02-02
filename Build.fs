@@ -26,7 +26,11 @@ Target.create "Run" (fun _ ->
 )
 
 Target.create "Format" (fun _ ->
-    run dotnet "fantomas . -r" "src"
+    run dotnet "fantomas . -r" "docs"
+)
+
+Target.create "Pack" (fun _ ->
+    run dotnet "pack -c Release" "src/Fable.Auth0.React"
 )
 
 open Fake.Core.TargetOperators
@@ -39,6 +43,8 @@ let dependencies = [
     "Clean"
         ==> "InstallClient"
         ==> "Run"
+
+    "Pack"
 ]
 
 [<EntryPoint>]
