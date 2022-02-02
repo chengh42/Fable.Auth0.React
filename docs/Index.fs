@@ -7,17 +7,15 @@ type Model = { Input: string }
 type Msg =
     | AddTodo
 
-let init () : Model * Cmd<Msg> =
+let init () : Model =
     let model = { Input = "" }
 
-    let cmd = Cmd.none
+    model
 
-    model, cmd
-
-let update (msg: Msg) (model: Model) : Model * Cmd<Msg> =
+let update (msg: Msg) (model: Model) : Model =
     match msg with
     | AddTodo ->
-        model, Cmd.none
+        model
 
 open Feliz
 open Feliz.DaisyUI
