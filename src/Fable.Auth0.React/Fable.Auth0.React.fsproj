@@ -8,12 +8,12 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageTags>fsharp;fable;react;auth0</PackageTags>
     <Authors>Hsin Cheng</Authors>
-    <Version>0.1.3</Version>
-    <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
+    <Version>0.2.0-alpha1</Version>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageReleaseNotes>
-      Support .NET 5
-    </PackageReleaseNotes>    
+      Targetframework netstandard2.0
+    </PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup>
     <NpmDependencies>
@@ -21,7 +21,6 @@
     </NpmDependencies>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="*.fsproj; *.fs; *.js;" Exclude="**\*.fs.js" PackagePath="fable\" />
     <Compile Include="Global.fs" />
     <Compile Include="Errors.fs" />
     <Compile Include="AuthState.fs" />
@@ -32,7 +31,10 @@
     <Compile Include="UseAuth0.fs" />
     <Compile Include="Auth0.React.fs" />
     <None Include="paket.references" />
-    <None Include="..\LICENSE" Pack="true" PackagePath=""/>
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="" />
   </ItemGroup>
-  <Import Project="..\.paket\Paket.Restore.targets" />
+  <ItemGroup>
+    <Content Include="*.fsproj; *.fs; *.js;" Exclude="**\*.fs.js" PackagePath="fable\" />
+  </ItemGroup>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
