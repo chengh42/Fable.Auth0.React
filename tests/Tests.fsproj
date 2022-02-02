@@ -9,7 +9,7 @@
     <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\Fable.Auth0.React.fsproj" />
+    <ProjectReference Include="..\src\Fable.Auth0.React\Fable.Auth0.React.fsproj" />
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>

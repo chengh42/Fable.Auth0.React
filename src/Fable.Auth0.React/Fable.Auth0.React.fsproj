@@ -9,10 +9,10 @@
     <PackageTags>fsharp;fable;react;auth0</PackageTags>
     <Authors>Hsin Cheng</Authors>
     <Version>0.2.0-alpha1</Version>
-    <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageReleaseNotes>
-      Support .NET 5
+      Targetframework netstandard2.0
     </PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup>
