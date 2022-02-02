@@ -7,13 +7,6 @@ nuget Fable.Core
 nuget Fable.Mocha
 nuget Fable.React
 nuget Fable.Promise
+nuget Feliz
+nuget Feliz.Router
 nuget FSharp.Core
-
-group Build
-    source https://api.nuget.org/v3/index.json
-    framework: net6.0
-    storage: none
-    nuget FSharp.Core
-    nuget Fake.Core.Target
-    nuget Fake.DotNet.Cli
-    nuget Fake.IO.FileSystem

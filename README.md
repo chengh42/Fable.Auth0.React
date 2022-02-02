@@ -5,9 +5,10 @@ Fable library for [@auth0/auth0-react](https://github.com/auth0/auth0-react), th
 ## Development
 
 ```bash
-# test
-npm run test
+# docs
+npm start
+npm run build
 
 # pack
-dotnet pack -c Release src/Fable.Auth0.React.fsproj
+dotnet pack -c Release src/Fable.Auth0.React
 ```

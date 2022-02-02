@@ -3,5 +3,8 @@
 bin/
 obj/
 paket-files/
+fable_modules/
 node_modules/
 dist/tests/
+**/*.fs.js
+**/*.fs.js.map
