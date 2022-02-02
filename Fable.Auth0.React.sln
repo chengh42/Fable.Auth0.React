@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Fable.Auth0.React", "src\Fable.Auth0.React\Fable.Auth0.React.fsproj", "{43B8FE65-A13E-4F24-BFC7-42F54327985D}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "App", "docs\App.fsproj", "{AA558569-749D-467E-B187-6574CAFCCF10}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Docs", "docs\Docs.fsproj", "{AA558569-749D-467E-B187-6574CAFCCF10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
