@@ -1,45 +1,25 @@
 {
     "private": true,
     "scripts": {
-        "prestart": "dotnet tool restore",
-        "start": "cross-os start",
-        "prebuild": "dotnet tool restore",
-        "build": "dotnet fable ./docs --outDir ./.fable-build && webpack"
-    },
-    "cross-os": {
-        "start": {
-            "darwin": "NODE_ENV=development dotnet fable watch ./docs --outDir ./.fable-build --run webpack serve",
-            "linux": "NODE_ENV=development dotnet fable watch ./docs --outDir ./.fable-build --run webpack serve",
-            "win32": "set NODE_ENV=development& dotnet fable watch ./docs --outDir ./.fable-build --run webpack serve"
-        }
+        "prebuild": "dotnet fable clean --yes docs",
+        "start": "dotnet fable watch --cwd docs -o output -s --run webpack-dev-server",
+        "build": "dotnet fable --cwd docs -o output -s --run webpack -p"
     },
     "devDependencies": {
-        "autoprefixer": "^10.4.0",
-        "copy-webpack-plugin": "^9.0.1",
-        "core-js": "^3.16.1",
-        "cross-os": "^1.4.0",
-        "css-loader": "^6.2.0",
-        "cssnano": "^5.0.10",
-        "dotenv-webpack": "^7.0.3",
-        "graceful-fs": "^4.2.8",
-        "html-webpack-plugin": "^5.3.2",
-        "mini-css-extract-plugin": "^2.2.0",
-        "postcss": "^8.3.11",
-        "postcss-import": "^14.0.2",
-        "postcss-loader": "^6.2.0",
-        "react-dom": "^17.0.2",
+        "copy-webpack-plugin": "^6.1.0",
+        "css-loader": "^5.2.6",
+        "file-loader": "^4.2.0",
+        "html-webpack-plugin": "^3.2.0",
+        "mini-css-extract-plugin": "^0.10.0",
+        "react": "^16.10.2",
+        "react-dom": "^16.10.2",
         "remotedev": "^0.2.9",
-        "resolve-url-loader": "^4.0.0",
-        "source-map-loader": "^3.0.0",
-        "style-loader": "^3.2.1",
-        "webpack": "^5.49.0",
-        "webpack-cli": "^4.7.2",
-        "webpack-dev-server": "^4.3.1"
-    },
-    "dependencies": {
-        "@auth0/auth0-react": "^1.9.0",
-        "daisyui": "^1.16.2",
-        "react": "^17.0.2",
-        "tailwindcss": "^3.0.1"
+        "sass": "^1.34.0",
+        "sass-loader": "^9.0.3",
+        "source-map-loader": "^1.1.3",
+        "style-loader": "^1.2.1",
+        "webpack": "^4.41.2",
+        "webpack-cli": "^3.3.9",
+        "webpack-dev-server": "^3.8.2"
     }
 }

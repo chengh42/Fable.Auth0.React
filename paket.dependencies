@@ -1,19 +1,17 @@
 source https://api.nuget.org/v3/index.json
-
+framework: net5.0, netstandard2.0
 storage: none
-framework: net6.0, netstandard2.0
+
 nuget Fable.Browser.Dom
 nuget Fable.Core
 nuget Fable.React
 nuget Fable.Promise
 nuget FSharp.Core
 
-nuget Feliz
-nuget Feliz.DaisyUI
-nuget Feliz.Router
-nuget Feliz.UseElmish
 nuget Fable.Elmish
 nuget Fable.Elmish.React
 nuget Fable.Elmish.Debugger
 nuget Fable.Elmish.HMR
-nuget FsToolkit.ErrorHandling.TaskResult
+nuget Feliz
+nuget Feliz.DaisyUI
+nuget Feliz.Router
