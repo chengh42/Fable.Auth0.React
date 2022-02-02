@@ -17,6 +17,7 @@ let update (msg: Msg) (model: Model) : Model =
     | AddTodo ->
         model
 
+open Fable.Core
 open Fable.Auth0.React
 open Feliz
 open Feliz.MaterialUI
@@ -46,7 +47,25 @@ let topBar =
         ]
     ]
 
+[<ReactComponent>]
+let LoginBtn () =
+    let ctxAuth0 = useAuth0 ()
+    let handleLoginWithRedirect _ =
+        let opts = unbox<RedirectLoginOptions> null
+
+        ctxAuth0.loginWithRedirect opts
+        |> Async.AwaitPromise
+        |> Async.StartImmediate
+
+    Mui.button [
+        button.color.primary
+        button.variant.contained
+        prop.onClick handleLoginWithRedirect
+        prop.text "Login with Auth0"
+    ]
+
 let view (model: Model) (dispatch: Msg -> unit) =
+
     auth0App [
         Mui.appBar [
             appBar.color.primary
@@ -67,11 +86,7 @@ let view (model: Model) (dispatch: Msg -> unit) =
                     Html.span ", the Auth0 SDK for React Single Page Applications (SPA)."
                 ]
                 Html.p "Note: Still a work-in-progress!"
-                Mui.button [
-                    button.color.primary
-                    button.variant.contained
-                    prop.text "Hello"
-                ]
+                LoginBtn ()
             ]
         ]
     ]
