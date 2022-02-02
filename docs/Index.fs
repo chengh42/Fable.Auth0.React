@@ -17,9 +17,18 @@ let update (msg: Msg) (model: Model) : Model =
     | AddTodo ->
         model
 
+open Fable.Auth0.React
 open Feliz
 open Feliz.MaterialUI
 module Mdi = Fable.MaterialUI.Icons
+
+let auth0App (children: seq<ReactElement>) =
+    let opts =
+        unbox<Auth0ProviderOptions>
+            {| domain = "dev-nik3xlx8.us.auth0.com"
+               clientId = "sGGwICcD2Cnp3DX1A0kacQmcsY0Ri7nu"
+               redirectUri = "http://localhost:8080" |}
+    Auth0Provider opts children
 
 let topBar =
     Mui.container [
@@ -38,7 +47,7 @@ let topBar =
     ]
 
 let view (model: Model) (dispatch: Msg -> unit) =
-    Html.div [
+    auth0App [
         Mui.appBar [
             appBar.color.primary
             appBar.position.sticky
