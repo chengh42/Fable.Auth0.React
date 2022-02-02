@@ -1,7 +1,16 @@
 source https://api.nuget.org/v3/index.json
 
 storage: none
-framework: net6.0, net5.0, netstandard2.0, netstandard2.1
+framework: net6.0, net5.0
 nuget Fable.Core
 nuget Fable.Mocha
 nuget Fable.React
+
+group Build
+    source https://api.nuget.org/v3/index.json
+    framework: net6.0
+    storage: none
+    nuget FSharp.Core
+    nuget Fake.Core.Target
+    nuget Fake.DotNet.Cli
+    nuget Fake.IO.FileSystem
