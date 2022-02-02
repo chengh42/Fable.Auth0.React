@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Fable.Auth0.React", "src\Fable.Auth0.React\Fable.Auth0.React.fsproj", "{43B8FE65-A13E-4F24-BFC7-42F54327985D}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Tests", "tests\Tests.fsproj", "{032F4353-28AE-4C0D-9951-4965E65E1BB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{43B8FE65-A13E-4F24-BFC7-42F54327985D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43B8FE65-A13E-4F24-BFC7-42F54327985D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43B8FE65-A13E-4F24-BFC7-42F54327985D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{032F4353-28AE-4C0D-9951-4965E65E1BB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{032F4353-28AE-4C0D-9951-4965E65E1BB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{032F4353-28AE-4C0D-9951-4965E65E1BB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{032F4353-28AE-4C0D-9951-4965E65E1BB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
