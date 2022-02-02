@@ -9,7 +9,7 @@ nuget Fable.Elmish.Debugger
 nuget Fable.Elmish.HMR == 4.1 // https://github.com/elmish/hmr/issues/35
 nuget Fable.React
 nuget Feliz
-nuget Feliz.DaisyUI
+nuget Feliz.MaterialUI
 nuget Feliz.Router
 
 nuget Fake.Core.Target
