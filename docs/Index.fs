@@ -22,5 +22,8 @@ open Feliz.DaisyUI
 
 let view (model: Model) (dispatch: Msg -> unit) =
     Html.div [
-        prop.text "Hello"
+        Daisy.button.a [
+            color.bgPrimary
+            prop.text "Hello there"
+        ]
     ]

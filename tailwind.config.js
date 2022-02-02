@@ -2,7 +2,7 @@ module.exports = {
     content: [
         './docs/**/*.html',
         './docs/**/*.fs',
-        '.fable-build/**/*.js',
+        './docs/output/**/*.js',
     ],
     plugins: [
         require('daisyui'),
