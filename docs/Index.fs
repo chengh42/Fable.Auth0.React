@@ -28,7 +28,7 @@ let auth0App (children: seq<ReactElement>) =
         unbox<Auth0ProviderOptions>
             {| domain = "dev-nik3xlx8.us.auth0.com"
                clientId = "sGGwICcD2Cnp3DX1A0kacQmcsY0Ri7nu"
-               redirectUri = Browser.Dom.window.location.origin |}
+               redirectUri = Browser.Dom.window.location.href |}
     Auth0Provider opts children
 
 [<ReactComponent>]
@@ -36,12 +36,11 @@ let ProfileBox () =
     let ctxAuth0 = useAuth0 ()
     let handleLoginWithRedirect _ =
         let opts = unbox<RedirectLoginOptions> null
-
         ctxAuth0.loginWithRedirect opts
         |> Async.AwaitPromise
         |> Async.StartImmediate
     let handleLogoutWithRedirect _ =
-        let returnTo = Browser.Dom.window.location.origin
+        let returnTo = Browser.Dom.window.location.href
         let opts = unbox<LogoutOptions> {| returnTo = returnTo |}
         ctxAuth0.logout opts
 
