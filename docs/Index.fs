@@ -105,12 +105,6 @@ let topBar =
         ]
     ]
 
-[<ReactComponent>]
-let UsageBox () =
-    Mui.container [
-        Html.h2 "Usage"
-        Html.p "WIP, coming soon."
-    ]
 
 let view (model: Model) (dispatch: Msg -> unit) =
 
@@ -133,7 +127,8 @@ let view (model: Model) (dispatch: Msg -> unit) =
                     ]
                     Html.span ", the Auth0 SDK for React Single Page Applications (SPA)."
                 ]
-                UsageBox ()
+                BodyContent.InstallationBox ()
+                BodyContent.UsageBox ()
             ]
         ]
     ]
