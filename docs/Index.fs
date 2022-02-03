@@ -55,7 +55,7 @@ let ProfileBox () =
     else
         let username, picture =
             match ctxAuth0.user with
-            | Some u ->
+            | Some (u: User) ->
                 sprintf "%A" u.name,
                 sprintf "%A" u.picture
             | None -> "", ""
