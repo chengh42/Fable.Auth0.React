@@ -8,10 +8,7 @@ open Global
 type Error = System.Exception
 
 [<Import("initialAuthState","@auth0/auth0-react")>]
-let initialAuthState: AuthState = jsNative
-
-type AuthState =
-    AuthState<obj>
+let initialAuthState: AuthState<Global.User> = jsNative
 
 /// The auth state which, when combined with the auth methods, make up the return object of the `useAuth0` hook.
 type [<AllowNullLiteral>] AuthState<'TUser> =

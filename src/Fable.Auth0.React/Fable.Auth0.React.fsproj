@@ -4,15 +4,15 @@
     <PackageId>Fable.Auth0.React</PackageId>
     <Description>Fable library for Auth0.React</Description>
     <RepositoryUrl>https://github.com/chengh42/Fable.Auth0.React.git</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/chengh42/Fable.Auth0.React</PackageProjectUrl>
+    <PackageProjectUrl>https://chengh42.github.io/Fable.Auth0.React/</PackageProjectUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageTags>fsharp;fable;react;auth0</PackageTags>
     <Authors>Hsin Cheng</Authors>
-    <Version>0.2.0-alpha1</Version>
+    <Version>0.2.0</Version>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageReleaseNotes>
-      Targetframework netstandard2.0
+      Update type for `initialAuthState`
     </PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup>
