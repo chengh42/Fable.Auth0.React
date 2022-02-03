@@ -28,7 +28,7 @@ let auth0App (children: seq<ReactElement>) =
         unbox<Auth0ProviderOptions>
             {| domain = "dev-nik3xlx8.us.auth0.com"
                clientId = "sGGwICcD2Cnp3DX1A0kacQmcsY0Ri7nu"
-               redirectUri = "http://localhost:8080" |}
+               redirectUri = Browser.Dom.window.location.origin |}
     Auth0Provider opts children
 
 [<ReactComponent>]
