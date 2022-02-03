@@ -82,6 +82,7 @@ let ProfileBox () =
             )
         ]
 
+// <a href="" target="_blank"><img src="" alt="Nuget" /></a>
 
 let topBar =
     Mui.container [
@@ -91,7 +92,19 @@ let topBar =
                 Html.div [
                     prop.style [ style.flexGrow 1 ]
                     prop.children [
-                        Html.h1 "Fable.Auth0.React"
+                        Html.h1 [
+                            prop.style [
+                                style.display.inlineBlock
+                                style.marginRight (length.em 0.5) ]
+                            prop.text "Fable.Auth0.React"
+                        ]
+                        Html.a [
+                            prop.href "https://www.nuget.org/packages/Fable.Auth0.React/"
+                            prop.target "_blank"
+                            prop.children [
+                                Html.img [ prop.src "https://img.shields.io/nuget/v/Fable.Auth0.React" ]
+                            ]
+                        ]
                     ]
                 ]
                 Mui.button [
@@ -112,7 +125,7 @@ let view (model: Model) (dispatch: Msg -> unit) =
         Mui.appBar [
             appBar.color.primary
             appBar.position.sticky
-            appBar.children (topBar)
+            appBar.children topBar
         ]
 
         Mui.container [
