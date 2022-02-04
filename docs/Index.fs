@@ -82,8 +82,6 @@ let ProfileBox () =
             )
         ]
 
-// <a href="" target="_blank"><img src="" alt="Nuget" /></a>
-
 let topBar =
     Mui.container [
         Mui.toolbar [
