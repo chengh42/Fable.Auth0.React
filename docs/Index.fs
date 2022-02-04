@@ -17,19 +17,23 @@ type Page =
         | Index -> "Installation", Pages.Index.View ()
         | Usage -> "Usage", Pages.Usage.View ()
 
-type Model = { CurrentUrl : string list; CurrentPage : Page }
+type Model = { CurrentUrl : string list; CurrentPage : Page; UserMetadata : string }
 
-type Msg = UrlChanged of string list
+type Msg = UrlChanged of string list | SetUserMetaData of string
 
 let init () : Model =
     { CurrentUrl = Router.currentUrl()
-      CurrentPage = Router.currentUrl() |> Page.parseUrl }
+      CurrentPage = Router.currentUrl() |> Page.parseUrl
+      UserMetadata = "" }
 
-let update (UrlChanged url) (model: Model) : Model =
-    { CurrentUrl = url; CurrentPage = Page.parseUrl url }
+let update (msg: Msg) (model: Model) : Model =
+    match msg with
+    | UrlChanged url -> { model with CurrentUrl = url; CurrentPage = Page.parseUrl url }
+    | SetUserMetaData md -> { model with UserMetadata = md }
 
 open Fable.Core
 open Fable.Auth0.React
+open Fable.SimpleHttp
 open Feliz
 open Feliz.DaisyUI
 open Feliz.DaisyUI.Operators
@@ -45,20 +49,13 @@ let auth0App (children: seq<ReactElement>) =
     Auth0Provider opts children
 
 [<ReactComponent>]
-let Auth0Box () =
+let LoginButton () =
     let ctxAuth0 = useAuth0 ()
-    let userMetadata, setUserMetadata = React.useState None
-    let handle _ =
-        ctxAuth0.getAccessTokenSilently
     let handleLoginWithRedirect _ =
         let opts = unbox<RedirectLoginOptions> null
         ctxAuth0.loginWithRedirect opts
         |> Async.AwaitPromise
         |> Async.StartImmediate
-    let handleLogoutWithRedirect _ =
-        let returnTo = Browser.Dom.window.location.href
-        let opts = unbox<LogoutOptions> {| returnTo = returnTo |}
-        ctxAuth0.logout opts
 
     if not ctxAuth0.isAuthenticated then
         Daisy.tooltip [
@@ -79,47 +76,112 @@ let Auth0Box () =
             ]
         ]
     else
-        let username, picture =
-            match ctxAuth0.user with
-            | Some (u: User) ->
-                sprintf "%A" u.given_name,
-                sprintf "%A" u.picture
-            | None -> "", ""
-        let userMetadataJson =
-            userMetadata |> function
-            | Some m ->
-                sprintf "User metadata: %A" m
-                // JS.JSON.stringify (m, JS.undefined, 2)
-            | None -> "No user metadata defined"
+        Html.none
 
-        Daisy.tooltip [
-            tooltip.text "Click to logout"
+[<ReactComponent>]
+let Profile (props: {| SetUserMetaData: string -> unit |}) =
+    let ctxAuth0 = useAuth0 ()
+    let username, picture, sub =
+        match ctxAuth0.user with
+        | Some (u: User) ->
+            sprintf "%A" u.name,
+            sprintf "%A" u.picture,
+            sprintf "%A" u.sub
+        | None -> "", "", ""
+    let handleLogoutWithRedirect _ =
+        let returnTo = Browser.Dom.window.location.href
+        let opts = unbox<LogoutOptions> {| returnTo = returnTo |}
+        ctxAuth0.logout opts
+
+    React.useEffect (fun () ->
+        let opts =
+            unbox<GetTokenSilentlyOptions>
+                {| audience = "https://dev-nik3xlx8.us.auth0.com/api/v2/"
+                   scope = "read:current_user" |}
+        try
+            async {
+                let! accessToken =
+                    ctxAuth0.getAccessTokenSilently.Invoke opts
+                    |> Async.AwaitPromise
+                let tokenHeader =
+                    "Bearer " + accessToken
+
+                let userDetailsByIdUrl =
+                    sprintf "https://dev-nik3xlx8.us.auth0.com/api/v2/users/%s" sub
+
+                let! metadataResponse =
+                    Http.request userDetailsByIdUrl
+                    |> Http.method GET
+                    |> Http.content (BodyContent.Text "{ }")
+                    |> Http.header (Headers.authorization tokenHeader)
+                    |> Http.send
+
+                props.SetUserMetaData metadataResponse.responseText
+            }
+            |> Async.StartImmediate
+
+        with ex ->
+            // @TODO: error handling
+            JS.console.log(ex.Message)
+    , [| |])
+
+    if ctxAuth0.isAuthenticated then
+        Daisy.card [
+            card.bordered
+            card.compact
+            color.bgPrimaryContent
+            ++ prop.className "m-5"
             prop.children [
-                Daisy.button.button [
-                    button.primary
-                    button.outline
-                    ++ prop.className "ml-3"
-                    prop.style [ style.alignContent.center ]
-                    prop.children [
-                        Daisy.avatar [
-                            Html.div [
-                                prop.className "rounded-btn w-8 h-8"
-                                prop.children [
-                                    Html.img [ prop.src picture ]
+                Daisy.cardBody [
+                    Daisy.cardTitle [
+                        prop.className "mx-3"
+                        prop.style [
+                            style.display.flex
+                            style.justifyContent.spaceAround
+                            style.alignContent.center
+                        ]
+                        prop.children [
+                            Daisy.avatar [
+                                Html.div [
+                                    prop.className "rounded-btn w-14 h-14"
+                                    prop.children [
+                                        Html.img [ prop.src picture ]
+                                    ]
                                 ]
                             ]
+                            Html.div [
+                                prop.style [
+                                    style.margin length.auto
+                                    style.paddingBottom (length.em 0.25)
+                                ]
+                                prop.text username
+                            ]
                         ]
-                        Html.p [
-                            prop.className "mx-3"
-                            prop.text username
-                        ]
-                        Html.i [ prop.className "fas fa-sign-out-alt" ]
                     ]
-                    prop.onClick handleLogoutWithRedirect
+                    Daisy.cardActions [
+                        Daisy.button.label [
+                            prop.htmlFor "modal-user-metadata"
+                            button.primary
+                            prop.text "Metadata"
+                        ]
+                        Daisy.button.button [
+                            button.primary
+                            button.outline
+                            prop.onClick handleLogoutWithRedirect
+                            prop.children [
+                                Html.p [
+                                    prop.className "mr-3"
+                                    prop.text "Logout"
+                                ]
+                                Html.i [ prop.className "fas fa-sign-out-alt" ]
+                            ]
+                        ]
+                    ]
                 ]
             ]
         ]
-
+    else
+        Html.none
 
 let private leftSide (model: Model) (dispatch: Msg -> unit) =
     let pages =
@@ -130,74 +192,81 @@ let private leftSide (model: Model) (dispatch: Msg -> unit) =
         Daisy.drawerOverlay [ prop.htmlFor "main-menu" ]
         Html.aside [
             prop.className "flex flex-col border-r w-80 bg-base-100 text-base-content"
+            prop.style [
+                style.height (length.vh 100)
+                style.justifyContent.spaceBetween
+            ]
             prop.children [
                 Html.div [
-                    prop.className "font-title px-5 py-5"
-                    prop.children [
-                        Html.div [
-                            color.textPrimary
-                            ++ prop.className "text-3xl font-bold py-1"
-                            prop.text "Fable.Auth0.React"
-                        ]
-                        Html.div [
-                            prop.className "py-1"
-                            prop.children [
-                                Html.a [
-                                    prop.href "https://www.nuget.org/packages/Fable.Auth0.React/"
-                                    prop.target "_blank"
-                                    prop.children [
-                                        Html.img [ prop.src "https://img.shields.io/nuget/v/Fable.Auth0.React?style=for-the-badge&?logo=nuget" ]
-                                    ]
-                                ]
+                    Html.div [
+                        prop.className "font-title px-5 py-5"
+                        prop.children [
+                            Html.div [
+                                color.textPrimary
+                                ++ prop.className "text-3xl font-bold py-1"
+                                prop.text "Fable.Auth0.React"
                             ]
-                        ]
-                        Html.div [
-                            prop.className "py-2"
-                            prop.children [
-                                Html.p [
-                                    Html.span "Fable library for "
+                            Html.div [
+                                prop.className "py-1"
+                                prop.children [
                                     Html.a [
-                                        prop.href "https://github.com/auth0/auth0-react"
+                                        prop.href "https://www.nuget.org/packages/Fable.Auth0.React/"
                                         prop.target "_blank"
-                                        prop.children [ Html.span "@auth0/auth0-react" ]
+                                        prop.children [
+                                            Html.img [ prop.src "https://img.shields.io/nuget/v/Fable.Auth0.React?style=for-the-badge&?logo=nuget" ]
+                                        ]
                                     ]
-                                    Html.span ", the Auth0 SDK for React Single Page Applications (SPA)."
+                                ]
+                            ]
+                            Html.div [
+                                prop.className "py-2"
+                                prop.children [
+                                    Html.p [
+                                        Html.span "Fable library for "
+                                        Html.a [
+                                            prop.href "https://github.com/auth0/auth0-react"
+                                            prop.target "_blank"
+                                            prop.children [ Html.span "@auth0/auth0-react" ]
+                                        ]
+                                        Html.span ", the Auth0 SDK for React Single Page Applications (SPA)."
+                                    ]
+                                ]
+                            ]
+                            Html.div [
+                                prop.className "py-2"
+                                prop.style [ style.display.flex; style.alignContent.center ]
+                                prop.children [
+                                    Daisy.button.a [
+                                        button.secondary
+                                        prop.href "https://github.com/chengh42/Fable.Auth0.React"
+                                        prop.target "_blank"
+                                        prop.children [
+                                            Html.i [ prop.className "fab fa-github px-1" ]
+                                            Html.i [ prop.className "fas fa-code px-1" ]
+                                        ]
+                                    ]
+                                    LoginButton ()
                                 ]
                             ]
                         ]
-                        Html.div [
-                            prop.className "py-2"
-                            prop.style [ style.display.flex; style.alignContent.center ]
-                            prop.children [
-                                Daisy.button.a [
-                                    button.secondary
-                                    prop.href "https://github.com/chengh42/Fable.Auth0.React"
-                                    prop.target "_blank"
-                                    prop.children [
-                                        Html.i [ prop.className "fab fa-github px-1" ]
-                                        Html.i [ prop.className "fas fa-code px-1" ]
+                    ]
+                    Daisy.menu [
+                        menu.compact
+                        prop.className "flex flex-col p-4 pt-0"
+                        prop.children [
+                            for (page, url) in pages do
+                                let title, _ = Page.parsePage page
+                                Html.li [
+                                    Html.a [
+                                        if page = model.CurrentPage then menuItem.active
+                                        prop.text title
+                                        prop.onClick (fun _ -> UrlChanged [url] |> dispatch)
                                     ]
                                 ]
-                                Auth0Box ()
-                            ]
                         ]
                     ]
                 ]
-                Daisy.menu [
-                    menu.compact
-                    prop.className "flex flex-col p-4 pt-0"
-                    prop.children [
-                        for (page, url) in pages do
-                            let title, _ = Page.parsePage page
-                            Html.li [
-                                Html.a [
-                                    if page = model.CurrentPage then menuItem.active
-                                    prop.text title
-                                    prop.onClick (fun _ -> UrlChanged [url] |> dispatch)
-                                ]
-                            ]
-                    ]
-                ]
+                Profile ({| SetUserMetaData = SetUserMetaData >> dispatch |})
             ]
         ]
     ]
@@ -219,6 +288,10 @@ let rightSide (model: Model) (dispatch: Msg -> unit) =
     ]
 
 let private pageLayout (model: Model) (dispatch: Msg -> unit) =
+    let userMetadata =
+        match model.UserMetadata with
+        | "" -> [ ]
+        | md -> JS.JSON.parse md |> JS.Constructors.Object.entries |> List.ofSeq
     Html.div [
         prop.className "bg-base-100 text-base-content h-screen"
         theme.cupcake
@@ -229,13 +302,53 @@ let private pageLayout (model: Model) (dispatch: Msg -> unit) =
                     Daisy.drawerToggle [ prop.id "main-menu" ]
                     rightSide model dispatch
                     leftSide model dispatch
+                    Daisy.modalToggle [ prop.id "modal-user-metadata" ]
+                    Daisy.modal [
+                        prop.children [
+                            Daisy.modalBox [
+                                match userMetadata with
+                                | [ ] -> Html.text "Loading and parsing user metadata ..."
+                                | md ->
+                                    Html.div [
+                                        prop.className "overflow-x-hidden overflow-y-auto w-full min-h-30 max-h-40"
+                                        prop.children [
+                                            Daisy.table [
+                                                table.compact
+                                                prop.className "w-full"
+                                                prop.children [
+                                                    Html.thead [
+                                                        Html.tr [
+                                                            Html.th "Key"
+                                                            Html.th "Value"
+                                                        ]
+                                                    ]
+                                                    Html.tbody [
+                                                        for (key, value) in md do
+                                                        Html.tr [
+                                                            Html.th key
+                                                            Html.th (sprintf "%A" value)
+                                                        ]
+                                                    ]
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                Daisy.modalAction [
+                                    Daisy.button.label [
+                                        prop.htmlFor "modal-user-metadata"
+                                        prop.text "I see"
+                                        button.primary
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
                 ]
             ]
         ]
     ]
 
 let view (model: Model) (dispatch: Msg -> unit) =
-
     auth0App [
         React.router [
             router.hashMode
