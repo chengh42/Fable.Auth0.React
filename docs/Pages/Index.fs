@@ -7,7 +7,6 @@ open CodeSnippet
 [<ReactComponent>]
 let View () =
     Html.div [
-        Html.h2 "Installation"
         Html.p "Install npm dependencies:"
         Highlight.highlight [
             highlight.language.bash
