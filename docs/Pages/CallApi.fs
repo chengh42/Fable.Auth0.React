@@ -55,7 +55,6 @@ let ProfileBox () =
                 let! metadataResponse =
                     Http.request userDetailsByIdUrl
                     |> Http.method GET
-                    |> Http.content (BodyContent.Text "{ }")
                     |> Http.header (Headers.authorization tokenHeader)
                     |> Http.send
 
@@ -67,7 +66,7 @@ let ProfileBox () =
         with ex ->
             // error handling
             JS.console.log(ex.Message)
-    , [| |])
+    , [| ctxAuth0.isAuthenticated :> obj |])
 
     // ...
 """
