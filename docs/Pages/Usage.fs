@@ -77,13 +77,7 @@ let View () =
     Html.div [
         Html.p [
             Html.span "Before adjusting your F# codebase, configure Auth0 for your React application following the tutorial "
-            Daisy.link [
-                link.hover
-                link.accent
-                prop.href "https://auth0.com/docs/quickstart/spa/react"
-                prop.target "_blank"
-                prop.text "Auth0 React SDK Quickstarts"
-            ]
+            Html.a "Auth0 React SDK Quickstarts" "https://auth0.com/docs/quickstart/spa/react"
             Html.span "."
         ]
         Html.h3 "Integrate Auth0 in F# application"
@@ -117,12 +111,8 @@ let View () =
         ]
         Html.p [
             Html.span "For a working example, see "
-            Daisy.link [
-                link.hover
-                link.accent
-                prop.href "https://github.com/chengh42/Fable.Auth0.React/tree/main/docs"
-                prop.text "https://github.com/chengh42/Fable.Auth0.React/tree/main/docs"
-            ]
+            Html.a "https://github.com/chengh42/Fable.Auth0.React/tree/main/docs"
+                "https://github.com/chengh42/Fable.Auth0.React/tree/main/docs"
             Html.span "."
         ]
     ]
