@@ -11,9 +11,9 @@ type Snippet =
 let auth0App (children: seq<ReactElement>): ReactElement =
     let opts =
         unbox<Auth0ProviderOptions>
-            {| domain = "your auth0 domain"
-               clientId = "your auth0 clientId"
-               redirectUri = "your redirect uri after logged-in" |}
+            {| domain = "YOUR_AUTH0_DOMAIN"
+               clientId = "YOUR_AUTO0_CLIENT_ID"
+               redirectUri = "YOUR_REDIRECT_URI_AFTER_LOGGED_IN" |}
     Auth0Provider opts children
 """
     static member useAuth0 = """// Note that the `useAuth0` hook has to be used in a ReactComponent

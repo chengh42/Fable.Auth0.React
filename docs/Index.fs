@@ -9,10 +9,12 @@ type Url = Url of string with member this.UrlSegment = this |> function Url v ->
 type Page =
     | Index
     | Usage
+    | CallApi
     | Contribution with
     static member parseUrl (url: string list) =
         match url with
         | [ "usage" ] -> Page.Usage
+        | [ "call-api" ] -> Page.CallApi
         | [ "contribution" ] -> Page.Contribution
         | [ "/" ] | _ -> Page.Index
 
@@ -20,6 +22,7 @@ type Page =
         match page with
         | Index -> Url "/", "Installation", Pages.Installation.View ()
         | Usage -> Url "usage", "Basic usage", Pages.Usage.View ()
+        | CallApi -> Url "call-api", "Call an API", Pages.CallApi.View ()
         | Contribution -> Url "contribution", "Contribution", Pages.Contribution.View ()
 
 type Model = { CurrentUrl : string list; CurrentPage : Page; UserMetadata : string }
@@ -191,7 +194,8 @@ let Profile (props: {| SetUserMetaData: string -> unit |}) =
 let private leftSide (model: Model) (dispatch: Msg -> unit) =
     let pages =
         [ Page.Index
-          Page.Usage ]
+          Page.Usage
+          Page.CallApi ]
 
     Daisy.drawerSide [
         Daisy.drawerOverlay [ prop.htmlFor "main-menu" ]
