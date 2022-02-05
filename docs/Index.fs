@@ -132,7 +132,8 @@ let Profile (props: {| SetUserMetadata: string -> unit |}) =
                 | res when res.statusCode = 200 ->
                     props.SetUserMetadata metadataResponse.responseText
                 | res ->
-                    JS.console.log($"Failed to fetch metadata: {res}")
+                    // JS.console.log($"Failed to fetch metadata: {res}")
+                    ()
             }
             |> Async.StartImmediate
 
