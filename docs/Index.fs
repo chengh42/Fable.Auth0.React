@@ -122,7 +122,10 @@ let Profile (props: {| SetUserMetadata: string -> unit |}) =
                 let! metadataResponse =
                     Http.request userDetailsByIdUrl
                     |> Http.method GET
-                    |> Http.header (Headers.authorization tokenHeader)
+                    |> Http.headers [
+                        Headers.authorization tokenHeader
+                        Headers.contentType "application/json"
+                    ]
                     |> Http.send
 
                 JS.console.log("metadataResponse = ", metadataResponse)
@@ -329,6 +332,31 @@ let rightSide (model: Model) (dispatch: Msg -> unit) =
         ]
     ]
 
+[<ReactComponent>]
+let UserMetadataContent (props: {| UserMetadata: string |}) =
+    let ctxAuth0 = useAuth0 ()
+    match props.UserMetadata, ctxAuth0.isLoading with
+    | "", true -> Shared.Spinner ()
+    | "", false -> Shared.Html.p "No user's metadata received yet."
+    | userMd, _ ->
+        Html.div [
+            Shared.Html.p "User's metadata:"
+            Daisy.alert [
+                alert.info
+                prop.children [
+                    Html.span [
+                        prop.style [
+                            style.overflowX.scroll
+                            style.maxHeight (length.em 10)
+                            style.margin (length.em 1)
+                            style.paddingBottom (length.em 1)
+                        ]
+                        prop.text userMd
+                    ]
+                ]
+            ]
+        ]
+
 let private pageLayout (model: Model) (dispatch: Msg -> unit) =
     Html.div [
         prop.className "bg-base-100 text-base-content h-screen"
@@ -344,26 +372,7 @@ let private pageLayout (model: Model) (dispatch: Msg -> unit) =
                     Daisy.modal [
                         prop.children [
                             Daisy.modalBox [
-                                match model.UserMetadata with
-                                | "" -> Shared.Spinner ()
-                                | token ->
-                                    Html.div [
-                                        Shared.Html.p "User's metadata:"
-                                        Daisy.alert [
-                                            alert.info
-                                            prop.children [
-                                                Html.span [
-                                                    prop.style [
-                                                        style.overflowX.scroll
-                                                        style.maxHeight (length.em 10)
-                                                        style.margin (length.em 1)
-                                                        style.paddingBottom (length.em 1)
-                                                    ]
-                                                    prop.text token
-                                                ]
-                                            ]
-                                        ]
-                                    ]
+                                UserMetadataContent {| UserMetadata = model.UserMetadata |}
                                 Daisy.modalAction [
                                     Daisy.button.label [
                                         prop.htmlFor "modal-user-access-token"
