@@ -33,8 +33,8 @@ let View () =
             Daisy.link [
                 link.accent
                 link.hover
-                prop.href (Router.format("contribution"))
-                prop.text "Contribution"
+                prop.href (Router.format("contributing"))
+                prop.text "Contributing"
             ]
             Html.span " section."
         ]

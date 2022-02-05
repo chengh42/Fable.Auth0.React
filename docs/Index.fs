@@ -10,13 +10,13 @@ type Page =
     | Index
     | Usage
     | CallApi
-    | Contribution
+    | Contributing
     | Acknowledgement with
     static member parseUrl (url: string list) =
         match url with
         | [ "usage" ] -> Page.Usage
         | [ "call-api" ] -> Page.CallApi
-        | [ "contribution" ] -> Page.Contribution
+        | [ "contributing" ] -> Page.Contributing
         | [ "acknowledgement" ] -> Page.Acknowledgement
         | [ "/" ] | _ -> Page.Index
 
@@ -25,7 +25,7 @@ type Page =
         | Index -> Url "/", "Installation", Pages.Installation.View ()
         | Usage -> Url "usage", "Basic usage", Pages.Usage.View ()
         | CallApi -> Url "call-api", "Call an API", Pages.CallApi.View ()
-        | Contribution -> Url "contribution", "Contribution", Pages.Contribution.View ()
+        | Contributing -> Url "contributing", "Contributing", Pages.Contributing.View ()
         | Acknowledgement -> Url "acknowledgement", "Acknowledgement", Pages.Acknowledgement.View ()
 
 type Model = { CurrentUrl : string list; CurrentPage : Page; UserMetadata : string }
@@ -234,7 +234,7 @@ let private leftSide (model: Model) (dispatch: Msg -> unit) =
           Page.Usage
           Page.CallApi ]
     let pagesAbout =
-        [ Page.Contribution
+        [ Page.Contributing
           Page.Acknowledgement ]
 
     Daisy.drawerSide [

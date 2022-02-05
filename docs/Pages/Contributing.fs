@@ -1,4 +1,4 @@
-module Pages.Contribution
+module Pages.Contributing
 
 open Feliz
 open Shared
@@ -31,7 +31,7 @@ dotnet run pack
 let View () =
     Html.div [
         Html.p [
-            Html.span "Contribution is welcomed! You can find the source code on "
+            Html.span "Contributions are welcomed! You can find the source code on "
             Html.a "GitHub repository" "https://github.com/chengh42/Fable.Auth0.React"
             Html.span "."
         ]
