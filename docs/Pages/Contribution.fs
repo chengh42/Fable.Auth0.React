@@ -24,8 +24,6 @@ dotnet run pack
 </Project>
 """
 
-open Feliz.DaisyUI
-
 [<ReactComponent>]
 let View () =
     Html.div [
@@ -34,16 +32,19 @@ let View () =
             Html.a "GitHub repository" "https://github.com/chengh42/Fable.Auth0.React"
             Html.span "."
         ]
-        Html.p "For development,"
+        Html.p "For development, run"
         Highlight.highlight [
             highlight.language.bash
             prop.text Snippet.devCmd
         ]
-        Html.p "The packed Nuget package can be found under the src/Fable.Auth0.React/bin/Release directory."
-        Html.p "Don't forget to, before packing, update Nuget package metadata. To do so, edit in the .fsproj file,"
+        Html.p "The packed NuGet package can be found under the src/Fable.Auth0.React/bin/Release directory."
+        Html.p "Don't forget to, before packing, update NuGet package metadata. To do so, edit in the .fsproj file,"
         Highlight.highlight [
             highlight.language.xml
             prop.text Snippet.xmlFsproj
         ]
-        Html.p "Feel free to put up a pull request!"
+        Html.p [
+            Html.span "Feel free to put up a pull request! Or if you wish to (jointly) maintain the site and library, get in touch via GitHub "
+            Html.span [ Html.i [ prop.className "far fa-smile-wink" ] ]
+        ]
     ]

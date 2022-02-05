@@ -7,7 +7,7 @@ open Shared
 [<ReactComponent>]
 let View () =
     Html.div [
-        Html.p "Install npm dependencies:"
+        Html.p "Install npm dependencies with npm or yarn:"
         Highlight.highlight [
             highlight.language.bash
             prop.text """# using npm
@@ -17,7 +17,7 @@ npm install @auth0/auth0-react
 yarn add @auth0/auth0-react
 """
         ]
-        Html.p "And install nuget package:"
+        Html.p "And install nuget package with nuget or paket:"
         Highlight.highlight [
             highlight.language.bash
             prop.text """# using nuget

@@ -12,6 +12,7 @@
     <Compile Include="Pages/Usage.fs" />
     <Compile Include="Pages/CallApi.fs" />
     <Compile Include="Pages/Contribution.fs" />
+    <Compile Include="Pages/Acknowledgement.fs" />
     <Compile Include="Index.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>

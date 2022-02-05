@@ -10,12 +10,14 @@ type Page =
     | Index
     | Usage
     | CallApi
-    | Contribution with
+    | Contribution
+    | Acknowledgement with
     static member parseUrl (url: string list) =
         match url with
         | [ "usage" ] -> Page.Usage
         | [ "call-api" ] -> Page.CallApi
         | [ "contribution" ] -> Page.Contribution
+        | [ "acknowledgement" ] -> Page.Acknowledgement
         | [ "/" ] | _ -> Page.Index
 
     static member parsePage (page: Page) =
@@ -24,6 +26,7 @@ type Page =
         | Usage -> Url "usage", "Basic usage", Pages.Usage.View ()
         | CallApi -> Url "call-api", "Call an API", Pages.CallApi.View ()
         | Contribution -> Url "contribution", "Contribution", Pages.Contribution.View ()
+        | Acknowledgement -> Url "acknowledgement", "Acknowledgement", Pages.Acknowledgement.View ()
 
 type Model = { CurrentUrl : string list; CurrentPage : Page; UserAccessToken : string }
 
@@ -187,11 +190,32 @@ let Profile (props: {| SetAccessToken: string -> unit |}) =
     | false, false ->
         Html.none
 
+let private menuPages (title: string) pages model dispatch =
+    Daisy.menu [
+        menu.compact
+        prop.className "flex flex-col p-3 pt-0"
+        prop.children [
+            Daisy.menuTitle title
+            for page in pages do
+                let url, title, _ = Page.parsePage page
+                Html.li [
+                    Html.a [
+                        if page = model.CurrentPage then menuItem.active
+                        prop.text title
+                        prop.onClick (fun _ -> UrlChanged url.UrlSegment |> dispatch)
+                    ]
+                ]
+        ]
+    ]
+
 let private leftSide (model: Model) (dispatch: Msg -> unit) =
-    let pages =
+    let pagesDocs =
         [ Page.Index
           Page.Usage
           Page.CallApi ]
+    let pagesAbout =
+        [ Page.Contribution
+          Page.Acknowledgement ]
 
     Daisy.drawerSide [
         Daisy.drawerOverlay [ prop.htmlFor "main-menu" ]
@@ -253,37 +277,8 @@ let private leftSide (model: Model) (dispatch: Msg -> unit) =
                             ]
                         ]
                     ]
-                    Daisy.menu [
-                        menu.compact
-                        prop.className "flex flex-col p-3 pt-0"
-                        prop.children [
-                            Daisy.menuTitle "Docs"
-                            for page in pages do
-                                let url, title, _ = Page.parsePage page
-                                Html.li [
-                                    Html.a [
-                                        if page = model.CurrentPage then menuItem.active
-                                        prop.text title
-                                        prop.onClick (fun _ -> UrlChanged url.UrlSegment |> dispatch)
-                                    ]
-                                ]
-                        ]
-                    ]
-                    Daisy.menu [
-                        menu.compact
-                        prop.className "flex flex-col p-3 pt-0"
-                        prop.children [
-                            Daisy.menuTitle "Contributing"
-                            let url, title, _ = Page.parsePage Page.Contribution
-                            Html.li [
-                                Html.a [
-                                    if model.CurrentPage = Page.Contribution then menuItem.active
-                                    prop.text title
-                                    prop.onClick (fun _ -> UrlChanged url.UrlSegment |> dispatch)
-                                ]
-                            ]
-                        ]
-                    ]
+                    menuPages "Docs" pagesDocs model dispatch
+                    menuPages "About" pagesAbout model dispatch
                 ]
                 Profile ({| SetAccessToken = SetAccessToken >> dispatch |})
             ]
