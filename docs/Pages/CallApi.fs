@@ -37,6 +37,10 @@ open Feliz
 let ProfileBox () =
     let ctxAuth0 = useAuth0 ()
     let userMetadata, setUserMetadata = React.useState ""
+    let usersub =
+        ctxAuth0.user
+        |> Option.bind (fun v -> v.sub)
+        |> Option.defaultValue ""
 
     React.useEffect (fun () ->
         let opts =
@@ -51,7 +55,7 @@ let ProfileBox () =
                 let tokenHeader =
                     "Bearer " + accessToken
                 let userDetailsByIdUrl =
-                    sprintf "https://{YOUR_AUTH0_DOMAIN}/api/v2/users/%s" sub
+                    sprintf "https://{YOUR_AUTH0_DOMAIN}/api/v2/users/%s" usersub
                 let! metadataResponse =
                     Http.request userDetailsByIdUrl
                     |> Http.method GET
@@ -59,14 +63,14 @@ let ProfileBox () =
                     |> Http.send
 
                 // update component state
-                setUserMetaData metadataResponse.responseText
+                setUserMetadata metadataResponse.responseText
             }
             |> Async.StartImmediate
 
         with ex ->
             // error handling
             JS.console.log(ex.Message)
-    , [| ctxAuth0.isAuthenticated :> obj |])
+    , [| usersub :> obj |]) // only re-run the effect if usersub changes
 
     // ...
 """
