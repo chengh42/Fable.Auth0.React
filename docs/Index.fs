@@ -28,19 +28,19 @@ type Page =
         | Contribution -> Url "contribution", "Contribution", Pages.Contribution.View ()
         | Acknowledgement -> Url "acknowledgement", "Acknowledgement", Pages.Acknowledgement.View ()
 
-type Model = { CurrentUrl : string list; CurrentPage : Page; UserAccessToken : string }
+type Model = { CurrentUrl : string list; CurrentPage : Page; UserMetadata : string }
 
-type Msg = UrlChanged of string list | SetAccessToken of string
+type Msg = UrlChanged of string list | SetUserMetadata of string
 
 let init () : Model =
     { CurrentUrl = Router.currentUrl()
       CurrentPage = Router.currentUrl() |> Page.parseUrl
-      UserAccessToken = "" }
+      UserMetadata = "" }
 
 let update (msg: Msg) (model: Model) : Model =
     match msg with
     | UrlChanged url -> { model with CurrentUrl = url; CurrentPage = Page.parseUrl url }
-    | SetAccessToken md -> { model with UserAccessToken = md }
+    | SetUserMetadata md -> { model with UserMetadata = md }
 
 open Fable.Core
 open Fable.Auth0.React
@@ -92,14 +92,17 @@ let LoginButton () =
         Html.none
 
 [<ReactComponent>]
-let Profile (props: {| SetAccessToken: string -> unit |}) =
+let Profile (props: {| SetUserMetadata: string -> unit |}) =
     let ctxAuth0 = useAuth0 ()
-    let username, picture =
+    let username, picture, usersub =
         match ctxAuth0.user with
         | Some (u: User) ->
             sprintf "%A" u.name,
-            sprintf "%A" u.picture
-        | None -> "", ""
+            sprintf "%A" u.picture,
+            sprintf "%A" u.sub
+        | None -> "", "", ""
+    let userDetailsByIdUrl =
+        sprintf "https://dev-nik3xlx8.us.auth0.com/api/v2/users/%s" usersub
     let handleLogoutWithRedirect _ =
         let returnTo = Browser.Dom.window.location.href
         let opts = unbox<LogoutOptions> {| returnTo = returnTo |}
@@ -115,8 +118,16 @@ let Profile (props: {| SetAccessToken: string -> unit |}) =
                 let! accessToken =
                     ctxAuth0.getAccessTokenSilently.Invoke opts
                     |> Async.AwaitPromise
+                let tokenHeader = "BEARER " + accessToken
+                let! metadataResponse =
+                    Http.request userDetailsByIdUrl
+                    |> Http.method GET
+                    |> Http.header (Headers.authorization tokenHeader)
+                    |> Http.send
 
-                props.SetAccessToken accessToken
+                JS.console.log("metadataResponse = ", metadataResponse)
+
+                props.SetUserMetadata metadataResponse.responseText
             }
             |> Async.StartImmediate
 
@@ -138,6 +149,7 @@ let Profile (props: {| SetAccessToken: string -> unit |}) =
             card.compact
             color.bgPrimaryContent
             ++ prop.className "m-5"
+            prop.style [ style.overflow.initial ]
             prop.children [
                 Daisy.cardBody [
                     Daisy.cardTitle [
@@ -167,13 +179,15 @@ let Profile (props: {| SetAccessToken: string -> unit |}) =
                     ]
                     Daisy.cardActions [
                         Daisy.button.label [
-                            prop.htmlFor "modal-user-access-token"
                             button.primary
-                            prop.text "Get token"
+                            ++ prop.className "lg:btn-md btn-sm"
+                            prop.htmlFor "modal-user-access-token"
+                            prop.text "Metadata"
                         ]
                         Daisy.button.button [
                             button.primary
                             button.outline
+                            ++ prop.className "lg:btn-md btn-sm"
                             prop.onClick handleLogoutWithRedirect
                             prop.children [
                                 Html.p [
@@ -221,10 +235,7 @@ let private leftSide (model: Model) (dispatch: Msg -> unit) =
         Daisy.drawerOverlay [ prop.htmlFor "main-menu" ]
         Html.aside [
             prop.className "flex flex-col border-r w-80 bg-base-100 text-base-content"
-            prop.style [
-                style.height (length.vh 100)
-                style.justifyContent.spaceBetween
-            ]
+            prop.style [ style.overflowY.auto ]
             prop.children [
                 Html.div [
                     Html.div [
@@ -280,14 +291,31 @@ let private leftSide (model: Model) (dispatch: Msg -> unit) =
                     menuPages "Docs" pagesDocs model dispatch
                     menuPages "About" pagesAbout model dispatch
                 ]
-                Profile ({| SetAccessToken = SetAccessToken >> dispatch |})
+                Profile ({| SetUserMetadata = SetUserMetadata >> dispatch |})
             ]
         ]
     ]
 
 let rightSide (model: Model) (dispatch: Msg -> unit) =
-    let url, title, content = model.CurrentPage |> Page.parsePage
+    let _, title, content = model.CurrentPage |> Page.parsePage
     Daisy.drawerContent [
+        Daisy.navbar [
+            color.bgPrimary
+            ++ color.textPrimaryContent
+            ++ prop.className "w-full lg:hidden sticky"
+            prop.children [
+                Daisy.button.label [
+                    prop.htmlFor "main-menu"
+                    button.square
+                    button.ghost
+                    prop.children [ Html.i [ prop.className "fa-2x fas fa-bars" ] ]
+                ]
+                Html.h1 [
+                    prop.className "text-2xl font-bold ml-2"
+                    prop.text "Fable.Auth0.React"
+                ]
+            ]
+        ]
         Html.div [
             prop.className "px-5 py-5"
             prop.children [
@@ -316,11 +344,11 @@ let private pageLayout (model: Model) (dispatch: Msg -> unit) =
                     Daisy.modal [
                         prop.children [
                             Daisy.modalBox [
-                                match model.UserAccessToken with
+                                match model.UserMetadata with
                                 | "" -> Shared.Spinner ()
                                 | token ->
                                     Html.div [
-                                        Shared.Html.p "The retrieved user token to be used for calling secured API:"
+                                        Shared.Html.p "User's metadata:"
                                         Daisy.alert [
                                             alert.info
                                             prop.children [
