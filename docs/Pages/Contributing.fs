@@ -9,7 +9,7 @@ dotnet tool restore
 
 # docs
 dotnet run # development
-dotnet run build # production
+dotnet run bundle # production
 
 # package
 dotnet run pack
