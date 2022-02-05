@@ -3,15 +3,15 @@ module Pages.Contribution
 open Feliz
 open Shared
 
-let private devCmd = """# docs
+type Snippet =
+    static member devCmd = """# docs
 dotnet run # development
 dotnet run build # production
 
 # package
 dotnet run pack
 """
-
-let private xmlFsproj = """<?xml version="1.0" encoding="utf-8"?>
+    static member xmlFsproj = """<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Version>{ Package version }</Version>
@@ -37,13 +37,13 @@ let View () =
         Html.p "For development,"
         Highlight.highlight [
             highlight.language.bash
-            prop.text devCmd
+            prop.text Snippet.devCmd
         ]
         Html.p "The packed Nuget package can be found under the src/Fable.Auth0.React/bin/Release directory."
         Html.p "Don't forget to, before packing, update Nuget package metadata. To do so, edit in the .fsproj file,"
         Highlight.highlight [
             highlight.language.xml
-            prop.text xmlFsproj
+            prop.text Snippet.xmlFsproj
         ]
         Html.p "Feel free to put up a pull request!"
     ]
