@@ -1,4 +1,4 @@
-module CodeSnippet
+module Shared
 
 open Fable.Core
 open Fable.Core.JsInterop
@@ -42,10 +42,25 @@ let reactHighlight (props : IReactProperty list) : ReactElement =
     let propsObject = keyValueList CaseRules.LowerFirst props
     ofImport "default" "react-highlight" propsObject []
 
+open Feliz.DaisyUI
+open Feliz.DaisyUI.Operators
+
 [<Erase>]
 type Highlight =
     static member inline highlight props =
         Helpers.Elm.props reactHighlight props "highlight"
+        |> Daisy.mockupCode
 
 type Html =
-    static member inline codeBlock (text: string) = Html.code [ prop.className "md-block"; prop.text text ]
+    static member inline codeBlock (text: string) =
+        Html.code [ prop.className "md-block"; prop.text text ]
+    static member p (text: string) =
+        Html.div [ prop.className "description"; prop.text text ]
+    static member p (children :seq<ReactElement>) =
+        Html.div [ prop.className "description"; prop.children children ]
+    static member h1 (text: string) =
+        Html.div [ color.textPrimary ++ prop.className "text-3xl font-bold"; prop.text text ]
+    static member h2 (text: string) =
+        Html.div [ color.textPrimary ++ prop.className "text-3xl font-bold"; prop.text text ]
+    static member h3 (text: string) =
+        Html.div [ color.textPrimary ++ prop.className "text-2xl font-bold"; prop.text text ]

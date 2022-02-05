@@ -14,7 +14,7 @@ type Page =
 
     static member parsePage (page: Page) =
         match page with
-        | Index -> "Installation", Pages.Index.View ()
+        | Index -> "Installation", Pages.Installation.View ()
         | Usage -> "Usage", Pages.Usage.View ()
 
 type Model = { CurrentUrl : string list; CurrentPage : Page; UserMetadata : string }
@@ -201,11 +201,7 @@ let private leftSide (model: Model) (dispatch: Msg -> unit) =
                     Html.div [
                         prop.className "font-title px-5 py-5"
                         prop.children [
-                            Html.div [
-                                color.textPrimary
-                                ++ prop.className "text-3xl font-bold py-1"
-                                prop.text "Fable.Auth0.React"
-                            ]
+                            Shared.Html.h1 "Fable.Auth0.React"
                             Html.div [
                                 prop.className "py-1"
                                 prop.children [
@@ -223,7 +219,9 @@ let private leftSide (model: Model) (dispatch: Msg -> unit) =
                                 prop.children [
                                     Html.p [
                                         Html.span "Fable library for "
-                                        Html.a [
+                                        Daisy.link [
+                                            link.hover
+                                            link.accent
                                             prop.href "https://github.com/auth0/auth0-react"
                                             prop.target "_blank"
                                             prop.children [ Html.span "@auth0/auth0-react" ]
@@ -279,7 +277,7 @@ let rightSide (model: Model) (dispatch: Msg -> unit) =
             prop.children [
                 Html.h2 [
                     color.textPrimary
-                    ++ prop.className "my-6 text-5xl font-bold"
+                    ++ prop.className "mb-6 text-4xl font-bold"
                     prop.text title
                 ]
                 content

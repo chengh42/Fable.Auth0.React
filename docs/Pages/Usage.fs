@@ -69,14 +69,17 @@ let AuthenticationBox () =
         ]
 """
 
-open CodeSnippet
+open Feliz.DaisyUI.Operators
+open Shared
 
 [<ReactComponent>]
 let View () =
     Html.div [
         Html.p [
             Html.span "Before adjusting your F# codebase, configure Auth0 for your React application following the tutorial "
-            Html.a [
+            Daisy.link [
+                link.hover
+                link.accent
                 prop.href "https://auth0.com/docs/quickstart/spa/react"
                 prop.target "_blank"
                 prop.text "Auth0 React SDK Quickstarts"
@@ -114,7 +117,9 @@ let View () =
         ]
         Html.p [
             Html.span "For a working example, see "
-            Html.a [
+            Daisy.link [
+                link.hover
+                link.accent
                 prop.href "https://github.com/chengh42/Fable.Auth0.React/tree/main/docs"
                 prop.text "https://github.com/chengh42/Fable.Auth0.React/tree/main/docs"
             ]
