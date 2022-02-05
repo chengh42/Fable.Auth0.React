@@ -4,7 +4,10 @@ open Feliz
 open Shared
 
 type Snippet =
-    static member devCmd = """# docs
+    static member devCmd = """# for first time use
+dotnet tool restore
+
+# docs
 dotnet run # development
 dotnet run build # production
 

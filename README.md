@@ -15,3 +15,7 @@ dotnet run bundle
 # pack
 dotnet run pack
 ```
+
+## Contribution
+
+See [documentation](https://chengh42.github.io/Fable.Auth0.React/#/contribution).
