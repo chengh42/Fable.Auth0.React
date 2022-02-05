@@ -118,19 +118,22 @@ let Profile (props: {| SetUserMetadata: string -> unit |}) =
                 let! accessToken =
                     ctxAuth0.getAccessTokenSilently.Invoke opts
                     |> Async.AwaitPromise
-                let tokenHeader = "BEARER " + accessToken
-                let! metadataResponse =
-                    Http.request userDetailsByIdUrl
-                    |> Http.method GET
-                    |> Http.headers [
-                        Headers.authorization tokenHeader
-                        Headers.contentType "application/json"
-                    ]
-                    |> Http.send
+                let fetchUserMetadata (accessToken: string) =
+                    async {
+                        let! metadataResponse =
+                            Fetch.fetch userDetailsByIdUrl [
+                                Fetch.requestHeaders [
+                                    Fetch.Types.HttpRequestHeaders.Authorization
+                                        ("BEARER " + accessToken)
+                                ]
+                            ] |> Async.AwaitPromise
+                        let! metadata = metadataResponse.text() |> Async.AwaitPromise
+                        return metadata
+                    }
 
-                JS.console.log("metadataResponse = ", metadataResponse)
+                let! metadata = fetchUserMetadata accessToken
 
-                props.SetUserMetadata metadataResponse.responseText
+                props.SetUserMetadata metadata
             }
             |> Async.StartImmediate
 

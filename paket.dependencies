@@ -9,6 +9,7 @@ nuget Fable.Elmish.Debugger
 nuget Fable.Elmish.HMR == 4.1 // https://github.com/elmish/hmr/issues/35
 nuget Fable.MaterialUI.Icons
 nuget Fable.React
+nuget Fable.Fetch
 nuget Fable.SimpleHttp
 nuget Feliz
 nuget Feliz.DaisyUI
