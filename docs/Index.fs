@@ -137,7 +137,7 @@ let Profile (props: {| SetUserMetadata: string -> unit |}) =
         with ex ->
             // @TODO: error handling
             JS.console.log(ex.Message)
-    , [| |])
+    , [| ctxAuth0.isAuthenticated :> obj |])
 
     match ctxAuth0.isLoading, ctxAuth0.isAuthenticated with
     | true, _ ->
