@@ -202,7 +202,7 @@ let private menuPages (title: string) pages model dispatch =
                     Html.a [
                         if page = model.CurrentPage then menuItem.active
                         prop.text title
-                        prop.onClick (fun _ -> UrlChanged url.UrlSegment |> dispatch)
+                        prop.href (Router.format(url.UrlSegment))
                     ]
                 ]
         ]

@@ -2,6 +2,7 @@ module Pages.Acknowledgement
 
 open Feliz
 open Feliz.DaisyUI
+open Feliz.Router
 open Shared
 
 let View () =
@@ -32,7 +33,7 @@ let View () =
             Daisy.link [
                 link.accent
                 link.hover
-                prop.href "#/contribution"
+                prop.href (Router.format("contribution"))
                 prop.text "Contribution"
             ]
             Html.span " section."
