@@ -25,19 +25,19 @@ type Page =
         | CallApi -> Url "call-api", "Call an API", Pages.CallApi.View ()
         | Contribution -> Url "contribution", "Contribution", Pages.Contribution.View ()
 
-type Model = { CurrentUrl : string list; CurrentPage : Page; UserMetadata : string }
+type Model = { CurrentUrl : string list; CurrentPage : Page; UserAccessToken : string }
 
-type Msg = UrlChanged of string list | SetUserMetaData of string
+type Msg = UrlChanged of string list | SetAccessToken of string
 
 let init () : Model =
     { CurrentUrl = Router.currentUrl()
       CurrentPage = Router.currentUrl() |> Page.parseUrl
-      UserMetadata = "" }
+      UserAccessToken = "" }
 
 let update (msg: Msg) (model: Model) : Model =
     match msg with
     | UrlChanged url -> { model with CurrentUrl = url; CurrentPage = Page.parseUrl url }
-    | SetUserMetaData md -> { model with UserMetadata = md }
+    | SetAccessToken md -> { model with UserAccessToken = md }
 
 open Fable.Core
 open Fable.Auth0.React
@@ -88,15 +88,14 @@ let LoginButton () =
         Html.none
 
 [<ReactComponent>]
-let Profile (props: {| SetUserMetaData: string -> unit |}) =
+let Profile (props: {| SetAccessToken: string -> unit |}) =
     let ctxAuth0 = useAuth0 ()
-    let username, picture, sub =
+    let username, picture =
         match ctxAuth0.user with
         | Some (u: User) ->
             sprintf "%A" u.name,
-            sprintf "%A" u.picture,
-            sprintf "%A" u.sub
-        | None -> "", "", ""
+            sprintf "%A" u.picture
+        | None -> "", ""
     let handleLogoutWithRedirect _ =
         let returnTo = Browser.Dom.window.location.href
         let opts = unbox<LogoutOptions> {| returnTo = returnTo |}
@@ -112,20 +111,8 @@ let Profile (props: {| SetUserMetaData: string -> unit |}) =
                 let! accessToken =
                     ctxAuth0.getAccessTokenSilently.Invoke opts
                     |> Async.AwaitPromise
-                let tokenHeader =
-                    "Bearer " + accessToken
 
-                let userDetailsByIdUrl =
-                    sprintf "https://dev-nik3xlx8.us.auth0.com/api/v2/users/%s" sub
-
-                let! metadataResponse =
-                    Http.request userDetailsByIdUrl
-                    |> Http.method GET
-                    |> Http.content (BodyContent.Text "{ }")
-                    |> Http.header (Headers.authorization tokenHeader)
-                    |> Http.send
-
-                props.SetUserMetaData metadataResponse.responseText
+                props.SetAccessToken accessToken
             }
             |> Async.StartImmediate
 
@@ -169,9 +156,9 @@ let Profile (props: {| SetUserMetaData: string -> unit |}) =
                     ]
                     Daisy.cardActions [
                         Daisy.button.label [
-                            prop.htmlFor "modal-user-metadata"
+                            prop.htmlFor "modal-user-access-token"
                             button.primary
-                            prop.text "Metadata"
+                            prop.text "Get token"
                         ]
                         Daisy.button.button [
                             button.primary
@@ -290,7 +277,7 @@ let private leftSide (model: Model) (dispatch: Msg -> unit) =
                         ]
                     ]
                 ]
-                Profile ({| SetUserMetaData = SetUserMetaData >> dispatch |})
+                Profile ({| SetAccessToken = SetAccessToken >> dispatch |})
             ]
         ]
     ]
@@ -312,10 +299,6 @@ let rightSide (model: Model) (dispatch: Msg -> unit) =
     ]
 
 let private pageLayout (model: Model) (dispatch: Msg -> unit) =
-    let userMetadata =
-        match model.UserMetadata with
-        | "" -> [ ]
-        | md -> JS.JSON.parse md |> JS.Constructors.Object.entries |> List.ofSeq
     Html.div [
         prop.className "bg-base-100 text-base-content h-screen"
         theme.cupcake
@@ -326,40 +309,33 @@ let private pageLayout (model: Model) (dispatch: Msg -> unit) =
                     Daisy.drawerToggle [ prop.id "main-menu" ]
                     rightSide model dispatch
                     leftSide model dispatch
-                    Daisy.modalToggle [ prop.id "modal-user-metadata" ]
+                    Daisy.modalToggle [ prop.id "modal-user-access-token" ]
                     Daisy.modal [
                         prop.children [
                             Daisy.modalBox [
-                                match userMetadata with
-                                | [ ] -> Html.text "Loading and parsing user metadata ..."
-                                | md ->
+                                match model.UserAccessToken with
+                                | "" -> Html.text "Loading and parsing user metadata ..."
+                                | token ->
                                     Html.div [
-                                        prop.className "overflow-x-hidden overflow-y-auto w-full min-h-30 max-h-40"
-                                        prop.children [
-                                            Daisy.table [
-                                                table.compact
-                                                prop.className "w-full"
-                                                prop.children [
-                                                    Html.thead [
-                                                        Html.tr [
-                                                            Html.th "Key"
-                                                            Html.th "Value"
-                                                        ]
+                                        Shared.Html.p "The retrieved user token to be used for calling secured API:"
+                                        Daisy.alert [
+                                            alert.info
+                                            prop.children [
+                                                Html.span [
+                                                    prop.style [
+                                                        style.overflowX.scroll
+                                                        style.maxHeight (length.em 10)
+                                                        style.margin (length.em 1)
+                                                        style.paddingBottom (length.em 1)
                                                     ]
-                                                    Html.tbody [
-                                                        for (key, value) in md do
-                                                        Html.tr [
-                                                            Html.th key
-                                                            Html.th (sprintf "%A" value)
-                                                        ]
-                                                    ]
+                                                    prop.text token
                                                 ]
                                             ]
                                         ]
                                     ]
                                 Daisy.modalAction [
                                     Daisy.button.label [
-                                        prop.htmlFor "modal-user-metadata"
+                                        prop.htmlFor "modal-user-access-token"
                                         prop.text "I see"
                                         button.primary
                                     ]
