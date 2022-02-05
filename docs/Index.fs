@@ -224,10 +224,7 @@ let private leftSide (model: Model) (dispatch: Msg -> unit) =
         Daisy.drawerOverlay [ prop.htmlFor "main-menu" ]
         Html.aside [
             prop.className "flex flex-col border-r w-80 bg-base-100 text-base-content"
-            prop.style [
-                style.height (length.vh 100)
-                style.justifyContent.spaceBetween
-            ]
+            prop.style [ style.overflowY.auto ]
             prop.children [
                 Html.div [
                     Html.div [
