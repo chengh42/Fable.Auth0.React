@@ -138,6 +138,7 @@ let Profile (props: {| SetAccessToken: string -> unit |}) =
             card.compact
             color.bgPrimaryContent
             ++ prop.className "m-5"
+            prop.style [ style.overflow.initial ]
             prop.children [
                 Daisy.cardBody [
                     Daisy.cardTitle [
@@ -167,13 +168,15 @@ let Profile (props: {| SetAccessToken: string -> unit |}) =
                     ]
                     Daisy.cardActions [
                         Daisy.button.label [
-                            prop.htmlFor "modal-user-access-token"
                             button.primary
-                            prop.text "Get token"
+                            ++ prop.className "lg:btn-md btn-sm"
+                            prop.htmlFor "modal-user-access-token"
+                            prop.text "Metadata"
                         ]
                         Daisy.button.button [
                             button.primary
                             button.outline
+                            ++ prop.className "lg:btn-md btn-sm"
                             prop.onClick handleLogoutWithRedirect
                             prop.children [
                                 Html.p [
