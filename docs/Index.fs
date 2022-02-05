@@ -3,19 +3,24 @@ module Index
 open Elmish
 open Feliz.Router
 
+type Url = Url of string with member this.UrlSegment = this |> function Url v -> [v]
+
 [<RequireQualifiedAccess>]
 type Page =
     | Index
-    | Usage with
+    | Usage
+    | Contribution with
     static member parseUrl (url: string list) =
         match url with
         | [ "usage" ] -> Page.Usage
-        | [ "home" ] | _ -> Page.Index
+        | [ "contribution" ] -> Page.Contribution
+        | [ "/" ] | _ -> Page.Index
 
     static member parsePage (page: Page) =
         match page with
-        | Index -> "Installation", Pages.Installation.View ()
-        | Usage -> "Usage", Pages.Usage.View ()
+        | Index -> Url "/", "Installation", Pages.Installation.View ()
+        | Usage -> Url "usage", "Basic usage", Pages.Usage.View ()
+        | Contribution -> Url "contribution", "Contribution", Pages.Contribution.View ()
 
 type Model = { CurrentUrl : string list; CurrentPage : Page; UserMetadata : string }
 
@@ -185,8 +190,8 @@ let Profile (props: {| SetUserMetaData: string -> unit |}) =
 
 let private leftSide (model: Model) (dispatch: Msg -> unit) =
     let pages =
-        [ Page.Index, "/"
-          Page.Usage, "usage" ]
+        [ Page.Index
+          Page.Usage ]
 
     Daisy.drawerSide [
         Daisy.drawerOverlay [ prop.htmlFor "main-menu" ]
@@ -250,17 +255,33 @@ let private leftSide (model: Model) (dispatch: Msg -> unit) =
                     ]
                     Daisy.menu [
                         menu.compact
-                        prop.className "flex flex-col p-4 pt-0"
+                        prop.className "flex flex-col p-3 pt-0"
                         prop.children [
-                            for (page, url) in pages do
-                                let title, _ = Page.parsePage page
+                            Daisy.menuTitle "Docs"
+                            for page in pages do
+                                let url, title, _ = Page.parsePage page
                                 Html.li [
                                     Html.a [
                                         if page = model.CurrentPage then menuItem.active
                                         prop.text title
-                                        prop.onClick (fun _ -> UrlChanged [url] |> dispatch)
+                                        prop.onClick (fun _ -> UrlChanged url.UrlSegment |> dispatch)
                                     ]
                                 ]
+                        ]
+                    ]
+                    Daisy.menu [
+                        menu.compact
+                        prop.className "flex flex-col p-3 pt-0"
+                        prop.children [
+                            Daisy.menuTitle "Contributing"
+                            let url, title, _ = Page.parsePage Page.Contribution
+                            Html.li [
+                                Html.a [
+                                    if model.CurrentPage = Page.Contribution then menuItem.active
+                                    prop.text title
+                                    prop.onClick (fun _ -> UrlChanged url.UrlSegment |> dispatch)
+                                ]
+                            ]
                         ]
                     ]
                 ]
@@ -270,7 +291,7 @@ let private leftSide (model: Model) (dispatch: Msg -> unit) =
     ]
 
 let rightSide (model: Model) (dispatch: Msg -> unit) =
-    let title, content = model.CurrentPage |> Page.parsePage
+    let url, title, content = model.CurrentPage |> Page.parsePage
     Daisy.drawerContent [
         Html.div [
             prop.className "px-5 py-5"
