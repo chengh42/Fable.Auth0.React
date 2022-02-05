@@ -7,9 +7,11 @@
   <ItemGroup>
     <None Include="index.html" />
     <None Include="paket.references" />
-    <Compile Include="CodeSnippet.fs" />
-    <Compile Include="Pages/Index.fs" />
+    <Compile Include="Shared.fs" />
+    <Compile Include="Pages/Installation.fs" />
     <Compile Include="Pages/Usage.fs" />
+    <Compile Include="Pages/CallApi.fs" />
+    <Compile Include="Pages/Contribution.fs" />
     <Compile Include="Index.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>

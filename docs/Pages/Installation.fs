@@ -1,8 +1,8 @@
 [<RequireQualifiedAccess>]
-module Pages.Index
+module Pages.Installation
 
 open Feliz
-open CodeSnippet
+open Shared
 
 [<ReactComponent>]
 let View () =

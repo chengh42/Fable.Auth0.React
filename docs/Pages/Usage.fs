@@ -7,16 +7,21 @@ open Feliz
 open Feliz.DaisyUI
 
 type Snippet =
-    static member auth0App = """// JS equivalent: <Auth0Provider/>
+    static member auth0App = """open Fable.Auth0.React
+
+// JS equivalent: <Auth0Provider/>
 let auth0App (children: seq<ReactElement>): ReactElement =
     let opts =
         unbox<Auth0ProviderOptions>
-            {| domain = "your auth0 domain"
-               clientId = "your auth0 clientId"
-               redirectUri = "your redirect uri after logged-in" |}
+            {| domain = "YOUR_AUTH0_DOMAIN"
+               clientId = "YOUR_AUTO0_CLIENT_ID"
+               redirectUri = "YOUR_REDIRECT_URI_AFTER_LOGGED_IN" |}
     Auth0Provider opts children
 """
-    static member useAuth0 = """// Note that the `useAuth0` hook has to be used in a ReactComponent
+    static member useAuth0 = """open Fable.Core
+open Feliz
+
+// Note that the `useAuth0` hook has to be used in a ReactComponent
 [<ReactComponent>]
 let AuthenticationBox () =
     let ctxAuth0 = useAuth0 ()
@@ -69,18 +74,21 @@ let AuthenticationBox () =
         ]
 """
 
-open CodeSnippet
+open Feliz.DaisyUI.Operators
+open Shared
 
 [<ReactComponent>]
 let View () =
     Html.div [
         Html.p [
             Html.span "Before adjusting your F# codebase, configure Auth0 for your React application following the tutorial "
-            Html.a [
-                prop.href "https://auth0.com/docs/quickstart/spa/react"
-                prop.target "_blank"
-                prop.text "Auth0 React SDK Quickstarts"
-            ]
+            Html.a "Auth0 React SDK Quickstarts" "https://auth0.com/docs/quickstart/spa/react"
+            Html.span "."
+        ]
+        Html.p [
+            Html.span "For a working example, see "
+            Html.a "https://github.com/chengh42/Fable.Auth0.React/tree/main/docs"
+                "https://github.com/chengh42/Fable.Auth0.React/tree/main/docs"
             Html.span "."
         ]
         Html.h3 "Integrate Auth0 in F# application"
@@ -111,13 +119,5 @@ let View () =
         Highlight.highlight [
             highlight.language.fsharp
             prop.text Snippet.useAuth0
-        ]
-        Html.p [
-            Html.span "For a working example, see "
-            Html.a [
-                prop.href "https://github.com/chengh42/Fable.Auth0.React/tree/main/docs"
-                prop.text "https://github.com/chengh42/Fable.Auth0.React/tree/main/docs"
-            ]
-            Html.span "."
         ]
     ]

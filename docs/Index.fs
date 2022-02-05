@@ -3,19 +3,27 @@ module Index
 open Elmish
 open Feliz.Router
 
+type Url = Url of string with member this.UrlSegment = this |> function Url v -> [v]
+
 [<RequireQualifiedAccess>]
 type Page =
     | Index
-    | Usage with
+    | Usage
+    | CallApi
+    | Contribution with
     static member parseUrl (url: string list) =
         match url with
         | [ "usage" ] -> Page.Usage
-        | [ "home" ] | _ -> Page.Index
+        | [ "call-api" ] -> Page.CallApi
+        | [ "contribution" ] -> Page.Contribution
+        | [ "/" ] | _ -> Page.Index
 
     static member parsePage (page: Page) =
         match page with
-        | Index -> "Installation", Pages.Index.View ()
-        | Usage -> "Usage", Pages.Usage.View ()
+        | Index -> Url "/", "Installation", Pages.Installation.View ()
+        | Usage -> Url "usage", "Basic usage", Pages.Usage.View ()
+        | CallApi -> Url "call-api", "Call an API", Pages.CallApi.View ()
+        | Contribution -> Url "contribution", "Contribution", Pages.Contribution.View ()
 
 type Model = { CurrentUrl : string list; CurrentPage : Page; UserMetadata : string }
 
@@ -45,7 +53,8 @@ let auth0App (children: seq<ReactElement>) =
                clientId = "sGGwICcD2Cnp3DX1A0kacQmcsY0Ri7nu"
                redirectUri = Browser.Dom.window.location.href
                audience = "https://dev-nik3xlx8.us.auth0.com/api/v2/"
-               scope = "read:current_user update:current_user_metadata" |}
+               scope = "read:current_user update:current_user_metadata"
+               useRefreshTokens = true |}
     Auth0Provider opts children
 
 [<ReactComponent>]
@@ -185,8 +194,9 @@ let Profile (props: {| SetUserMetaData: string -> unit |}) =
 
 let private leftSide (model: Model) (dispatch: Msg -> unit) =
     let pages =
-        [ Page.Index, "/"
-          Page.Usage, "usage" ]
+        [ Page.Index
+          Page.Usage
+          Page.CallApi ]
 
     Daisy.drawerSide [
         Daisy.drawerOverlay [ prop.htmlFor "main-menu" ]
@@ -201,11 +211,7 @@ let private leftSide (model: Model) (dispatch: Msg -> unit) =
                     Html.div [
                         prop.className "font-title px-5 py-5"
                         prop.children [
-                            Html.div [
-                                color.textPrimary
-                                ++ prop.className "text-3xl font-bold py-1"
-                                prop.text "Fable.Auth0.React"
-                            ]
+                            Shared.Html.h1 "Fable.Auth0.React"
                             Html.div [
                                 prop.className "py-1"
                                 prop.children [
@@ -223,7 +229,9 @@ let private leftSide (model: Model) (dispatch: Msg -> unit) =
                                 prop.children [
                                     Html.p [
                                         Html.span "Fable library for "
-                                        Html.a [
+                                        Daisy.link [
+                                            link.hover
+                                            link.accent
                                             prop.href "https://github.com/auth0/auth0-react"
                                             prop.target "_blank"
                                             prop.children [ Html.span "@auth0/auth0-react" ]
@@ -252,17 +260,33 @@ let private leftSide (model: Model) (dispatch: Msg -> unit) =
                     ]
                     Daisy.menu [
                         menu.compact
-                        prop.className "flex flex-col p-4 pt-0"
+                        prop.className "flex flex-col p-3 pt-0"
                         prop.children [
-                            for (page, url) in pages do
-                                let title, _ = Page.parsePage page
+                            Daisy.menuTitle "Docs"
+                            for page in pages do
+                                let url, title, _ = Page.parsePage page
                                 Html.li [
                                     Html.a [
                                         if page = model.CurrentPage then menuItem.active
                                         prop.text title
-                                        prop.onClick (fun _ -> UrlChanged [url] |> dispatch)
+                                        prop.onClick (fun _ -> UrlChanged url.UrlSegment |> dispatch)
                                     ]
                                 ]
+                        ]
+                    ]
+                    Daisy.menu [
+                        menu.compact
+                        prop.className "flex flex-col p-3 pt-0"
+                        prop.children [
+                            Daisy.menuTitle "Contributing"
+                            let url, title, _ = Page.parsePage Page.Contribution
+                            Html.li [
+                                Html.a [
+                                    if model.CurrentPage = Page.Contribution then menuItem.active
+                                    prop.text title
+                                    prop.onClick (fun _ -> UrlChanged url.UrlSegment |> dispatch)
+                                ]
+                            ]
                         ]
                     ]
                 ]
@@ -272,14 +296,14 @@ let private leftSide (model: Model) (dispatch: Msg -> unit) =
     ]
 
 let rightSide (model: Model) (dispatch: Msg -> unit) =
-    let title, content = model.CurrentPage |> Page.parsePage
+    let url, title, content = model.CurrentPage |> Page.parsePage
     Daisy.drawerContent [
         Html.div [
             prop.className "px-5 py-5"
             prop.children [
                 Html.h2 [
                     color.textPrimary
-                    ++ prop.className "my-6 text-5xl font-bold"
+                    ++ prop.className "mb-6 text-4xl font-bold"
                     prop.text title
                 ]
                 content
