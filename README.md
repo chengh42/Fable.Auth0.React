@@ -25,4 +25,4 @@ dotnet run pack
 
 ## Contributing
 
-See [documentation](https://chengh42.github.io/Fable.Auth0.React/#/contribution).
+See [documentation](https://chengh42.github.io/Fable.Auth0.React/#/contributing).
