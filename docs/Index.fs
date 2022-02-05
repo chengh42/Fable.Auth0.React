@@ -289,16 +289,18 @@ let rightSide (model: Model) (dispatch: Msg -> unit) =
     let _, title, content = model.CurrentPage |> Page.parsePage
     Daisy.drawerContent [
         Daisy.navbar [
-            color.bgPrimary ++ color.textPrimaryContent ++ prop.className "w-full lg:hidden sticky"
+            color.bgPrimary
+            ++ color.textPrimaryContent
+            ++ prop.className "w-full lg:hidden sticky"
             prop.children [
                 Daisy.button.label [
                     prop.htmlFor "main-menu"
                     button.square
                     button.ghost
-                    prop.children [ Html.i [ prop.className "fa-2x fas fa-bars mx-3" ] ]
+                    prop.children [ Html.i [ prop.className "fa-2x fas fa-bars" ] ]
                 ]
                 Html.h1 [
-                    prop.className "text-2xl font-bold"
+                    prop.className "text-2xl font-bold ml-2"
                     prop.text "Fable.Auth0.React"
                 ]
             ]
