@@ -286,8 +286,23 @@ let private leftSide (model: Model) (dispatch: Msg -> unit) =
     ]
 
 let rightSide (model: Model) (dispatch: Msg -> unit) =
-    let url, title, content = model.CurrentPage |> Page.parsePage
+    let _, title, content = model.CurrentPage |> Page.parsePage
     Daisy.drawerContent [
+        Daisy.navbar [
+            color.bgPrimary ++ color.textPrimaryContent ++ prop.className "w-full lg:hidden sticky"
+            prop.children [
+                Daisy.button.label [
+                    prop.htmlFor "main-menu"
+                    button.square
+                    button.ghost
+                    prop.children [ Html.i [ prop.className "fa-2x fas fa-bars mx-3" ] ]
+                ]
+                Html.h1 [
+                    prop.className "text-2xl font-bold"
+                    prop.text "Fable.Auth0.React"
+                ]
+            ]
+        ]
         Html.div [
             prop.className "px-5 py-5"
             prop.children [
