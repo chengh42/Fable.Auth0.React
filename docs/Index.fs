@@ -94,12 +94,13 @@ let LoginButton () =
 [<ReactComponent>]
 let Profile (props: {| SetAccessToken: string -> unit |}) =
     let ctxAuth0 = useAuth0 ()
-    let username, picture =
+    let username, picture, usersub =
         match ctxAuth0.user with
         | Some (u: User) ->
             sprintf "%A" u.name,
-            sprintf "%A" u.picture
-        | None -> "", ""
+            sprintf "%A" u.picture,
+            sprintf "%A" u.sub
+        | None -> "", "", ""
     let handleLogoutWithRedirect _ =
         let returnTo = Browser.Dom.window.location.href
         let opts = unbox<LogoutOptions> {| returnTo = returnTo |}
