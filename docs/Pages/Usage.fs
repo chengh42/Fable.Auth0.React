@@ -80,6 +80,12 @@ let View () =
             Html.a "Auth0 React SDK Quickstarts" "https://auth0.com/docs/quickstart/spa/react"
             Html.span "."
         ]
+        Html.p [
+            Html.span "For a working example, see "
+            Html.a "https://github.com/chengh42/Fable.Auth0.React/tree/main/docs"
+                "https://github.com/chengh42/Fable.Auth0.React/tree/main/docs"
+            Html.span "."
+        ]
         Html.h3 "Integrate Auth0 in F# application"
         Html.p [
             Html.span "Configure the SDK by wrapping your application in "
@@ -108,11 +114,5 @@ let View () =
         Highlight.highlight [
             highlight.language.fsharp
             prop.text Snippet.useAuth0
-        ]
-        Html.p [
-            Html.span "For a working example, see "
-            Html.a "https://github.com/chengh42/Fable.Auth0.React/tree/main/docs"
-                "https://github.com/chengh42/Fable.Auth0.React/tree/main/docs"
-            Html.span "."
         ]
     ]
