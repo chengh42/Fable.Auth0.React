@@ -43,4 +43,9 @@ let View () =
             Html.a "MIT license" "https://github.com/chengh42/Fable.Auth0.React/blob/main/LICENSE"
             Html.span "."
         ]
+        Html.img [
+            prop.src "./logo.png"
+            prop.alt "Fable.Auth0.React"
+            prop.style [ style.maxHeight (length.em 10) ]
+        ]
     ]
