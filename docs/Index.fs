@@ -307,7 +307,7 @@ let rightSide (model: Model) (dispatch: Msg -> unit) =
         Daisy.navbar [
             color.bgPrimary
             ++ color.textPrimaryContent
-            ++ prop.className "w-full lg:hidden sticky"
+            ++ prop.className "w-full lg:hidden fixed z-50"
             prop.children [
                 Daisy.button.label [
                     prop.htmlFor "main-menu"
