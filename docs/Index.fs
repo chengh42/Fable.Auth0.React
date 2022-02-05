@@ -53,7 +53,8 @@ let auth0App (children: seq<ReactElement>) =
                clientId = "sGGwICcD2Cnp3DX1A0kacQmcsY0Ri7nu"
                redirectUri = Browser.Dom.window.location.href
                audience = "https://dev-nik3xlx8.us.auth0.com/api/v2/"
-               scope = "read:current_user update:current_user_metadata" |}
+               scope = "read:current_user update:current_user_metadata"
+               useRefreshTokens = true |}
     Auth0Provider opts children
 
 [<ReactComponent>]

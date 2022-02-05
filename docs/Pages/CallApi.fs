@@ -14,6 +14,20 @@ let auth0App (children: seq<ReactElement>) =
                scope = "read:current_user update:current_user_metadata" |}
     Auth0Provider opts children
 """
+    static member auth0AppRefreshToken = """open Fable.Auth0.React
+
+// JS equivalent: <Auth0Provider/>
+let auth0App (children: seq<ReactElement>) =
+    let opts =
+        unbox<Auth0ProviderOptions>
+            {| domain = "YOUR_AUTH0_DOMAIN"
+               clientId = "YOUR_AUTO0_CLIENT_ID"
+               redirectUri = "YOUR_REDIRECT_URI_AFTER_LOGGED_IN"
+               audience = "https://{YOUR_AUTH0_DOMAIN}/api/v2/"
+               scope = "read:current_user update:current_user_metadata"
+               useRefreshTokens = true |}
+    Auth0Provider opts children
+"""
     static member useAuth0 = """open Fable.Core
 open Fable.SimpleHttp
 open Feliz
@@ -101,5 +115,18 @@ let View () =
         Highlight.highlight [
             highlight.language.fsharp
             prop.text Snippet.useAuth0
+        ]
+        Html.p [
+            Html.span "The "
+            Html.code "getAccessTokenSilently()"
+            Html.span " method can renew the access and ID token for you using refresh tokens. To get a refresh token when a user logs in, pass "
+            Html.code "useRefreshTokens={true}"
+            Html.span " as a prop to "
+            Html.code "Auth0Provider"
+            Html.span ":"
+        ]
+        Highlight.highlight [
+            highlight.language.fsharp
+            prop.text Snippet.auth0AppRefreshToken
         ]
     ]
