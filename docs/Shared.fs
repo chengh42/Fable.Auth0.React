@@ -67,3 +67,12 @@ type Html =
         Html.div [ color.textPrimary ++ prop.className "text-3xl font-bold"; prop.text text ]
     static member h3 (text: string) =
         Html.div [ color.textPrimary ++ prop.className "text-2xl font-bold"; prop.text text ]
+
+[<ReactComponent>]
+let Spinner () =
+    Html.div [
+        color.textPrimary ++ prop.className "fa-3x"
+        prop.children [
+            Html.i [ prop.className "fas fa-spinner fa-spin" ]
+        ]
+    ]

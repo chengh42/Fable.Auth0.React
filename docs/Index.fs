@@ -66,7 +66,8 @@ let LoginButton () =
         |> Async.AwaitPromise
         |> Async.StartImmediate
 
-    if not ctxAuth0.isAuthenticated then
+    match ctxAuth0.isLoading, ctxAuth0.isAuthenticated with
+    | false, false ->
         Daisy.tooltip [
             tooltip.text "Click to login"
             prop.children [
@@ -84,7 +85,7 @@ let LoginButton () =
                 ]
             ]
         ]
-    else
+    | _ ->
         Html.none
 
 [<ReactComponent>]
@@ -121,7 +122,14 @@ let Profile (props: {| SetAccessToken: string -> unit |}) =
             JS.console.log(ex.Message)
     , [| |])
 
-    if ctxAuth0.isAuthenticated then
+    match ctxAuth0.isLoading, ctxAuth0.isAuthenticated with
+    | true, _ ->
+        Daisy.card [
+            Daisy.cardBody [
+                Shared.Spinner ()
+            ]
+        ]
+    | _, true ->
         Daisy.card [
             card.bordered
             card.compact
@@ -176,7 +184,7 @@ let Profile (props: {| SetAccessToken: string -> unit |}) =
                 ]
             ]
         ]
-    else
+    | false, false ->
         Html.none
 
 let private leftSide (model: Model) (dispatch: Msg -> unit) =
@@ -314,7 +322,7 @@ let private pageLayout (model: Model) (dispatch: Msg -> unit) =
                         prop.children [
                             Daisy.modalBox [
                                 match model.UserAccessToken with
-                                | "" -> Html.text "Loading and parsing user metadata ..."
+                                | "" -> Shared.Spinner ()
                                 | token ->
                                     Html.div [
                                         Shared.Html.p "The retrieved user token to be used for calling secured API:"
