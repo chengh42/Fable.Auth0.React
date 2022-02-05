@@ -26,7 +26,7 @@ let View () =
             Html.a "Auth0" "https://auth0.com/"
             Html.span " for authentication in "
             Html.a "SAFE stack" "https://safe-stack.github.io/"
-            Html.span ". As it might be useful for anyone of similar needs, the libray was published to the NuGet package directory and this documentation site was built based on the Auth0 tutorials in JavaScript. "
+            Html.span ". As it might be useful for anyone of similar needs, the library was published to the NuGet package directory and this documentation site was built based on the Auth0 tutorials in JavaScript. "
             Html.span "As a F# beginner, the author does wish to acknowledge that, although the author has done their best to ensure that the library is well transpiled from JavaScript,"
             Html.span " the library could contain mistakes and/or further improvements can be made. "
             Html.span "Therefore, contributions are welcomed! If you wish to submit changes, have a look at the "
