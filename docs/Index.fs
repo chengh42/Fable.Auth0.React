@@ -128,9 +128,11 @@ let Profile (props: {| SetUserMetadata: string -> unit |}) =
                     ]
                     |> Http.send
 
-                JS.console.log("metadataResponse = ", metadataResponse)
-
-                props.SetUserMetadata metadataResponse.responseText
+                match metadataResponse with
+                | res when res.statusCode = 200 ->
+                    props.SetUserMetadata metadataResponse.responseText
+                | res ->
+                    JS.console.log($"Failed to fetch metadata: {res}")
             }
             |> Async.StartImmediate
 
@@ -339,22 +341,45 @@ let UserMetadataContent (props: {| UserMetadata: string |}) =
     | "", true -> Shared.Spinner ()
     | "", false -> Shared.Html.p "No user's metadata received yet."
     | userMd, _ ->
+        let userMetadataEntries =
+            try
+                userMd |> JS.JSON.parse |> JS.Constructors.Object.entries |> List.ofSeq
+            with ex ->
+                [ ]
         Html.div [
             Shared.Html.p "User's metadata:"
-            Daisy.alert [
-                alert.info
-                prop.children [
-                    Html.span [
-                        prop.style [
-                            style.overflowX.scroll
-                            style.maxHeight (length.em 10)
-                            style.margin (length.em 1)
-                            style.paddingBottom (length.em 1)
+            match userMetadataEntries with
+            | [ ] -> Html.text "Loading ..."
+            | entries ->
+                Html.div [
+                    prop.style [
+                        style.overflowX.hidden
+                        style.maxHeight (length.em 13)
+                        style.wordWrap.breakWord
+                    ]
+                    prop.children [
+                        Daisy.table [
+                            table.compact
+                            table.zebra
+                            ++ prop.className "w-full"
+                            prop.children [
+                                Html.thead [
+                                    Html.tr [
+                                        Html.th "Key"
+                                        Html.th "Value"
+                                    ]
+                                ]
+                                Html.tbody [
+                                    for (key, value) in entries do
+                                    Html.tr [
+                                        Html.td key
+                                        Html.td $"{value}"
+                                    ]
+                                ]
+                            ]
                         ]
-                        prop.text userMd
                     ]
                 ]
-            ]
         ]
 
 let private pageLayout (model: Model) (dispatch: Msg -> unit) =
