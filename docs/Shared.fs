@@ -37,6 +37,7 @@ module highlight =
         static member inline bash = prop.className "bash"
         static member inline fsharp = prop.className "fsharp"
         static member inline javascript = prop.className "javascript"
+        static member inline xml = prop.className "xml"
 
 let reactHighlight (props : IReactProperty list) : ReactElement =
     let propsObject = keyValueList CaseRules.LowerFirst props
@@ -54,6 +55,8 @@ type Highlight =
 type Html =
     static member inline codeBlock (text: string) =
         Html.code [ prop.className "md-block"; prop.text text ]
+    static member a (text: string) (href: string) =
+        Daisy.link [ link.accent; link.hover; prop.href href; prop.target "_blank"; prop.text text ]
     static member p (text: string) =
         Html.div [ prop.className "description"; prop.text text ]
     static member p (children :seq<ReactElement>) =
