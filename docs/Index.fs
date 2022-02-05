@@ -28,19 +28,19 @@ type Page =
         | Contribution -> Url "contribution", "Contribution", Pages.Contribution.View ()
         | Acknowledgement -> Url "acknowledgement", "Acknowledgement", Pages.Acknowledgement.View ()
 
-type Model = { CurrentUrl : string list; CurrentPage : Page; UserAccessToken : string }
+type Model = { CurrentUrl : string list; CurrentPage : Page; UserMetadata : string }
 
-type Msg = UrlChanged of string list | SetAccessToken of string
+type Msg = UrlChanged of string list | SetUserMetadata of string
 
 let init () : Model =
     { CurrentUrl = Router.currentUrl()
       CurrentPage = Router.currentUrl() |> Page.parseUrl
-      UserAccessToken = "" }
+      UserMetadata = "" }
 
 let update (msg: Msg) (model: Model) : Model =
     match msg with
     | UrlChanged url -> { model with CurrentUrl = url; CurrentPage = Page.parseUrl url }
-    | SetAccessToken md -> { model with UserAccessToken = md }
+    | SetUserMetadata md -> { model with UserMetadata = md }
 
 open Fable.Core
 open Fable.Auth0.React
@@ -92,7 +92,7 @@ let LoginButton () =
         Html.none
 
 [<ReactComponent>]
-let Profile (props: {| SetAccessToken: string -> unit |}) =
+let Profile (props: {| SetUserMetadata: string -> unit |}) =
     let ctxAuth0 = useAuth0 ()
     let username, picture, usersub =
         match ctxAuth0.user with
@@ -101,6 +101,8 @@ let Profile (props: {| SetAccessToken: string -> unit |}) =
             sprintf "%A" u.picture,
             sprintf "%A" u.sub
         | None -> "", "", ""
+    let userDetailsByIdUrl =
+        sprintf "https://dev-nik3xlx8.us.auth0.com/api/v2/users/%s" usersub
     let handleLogoutWithRedirect _ =
         let returnTo = Browser.Dom.window.location.href
         let opts = unbox<LogoutOptions> {| returnTo = returnTo |}
@@ -116,8 +118,16 @@ let Profile (props: {| SetAccessToken: string -> unit |}) =
                 let! accessToken =
                     ctxAuth0.getAccessTokenSilently.Invoke opts
                     |> Async.AwaitPromise
+                let tokenHeader = "BEARER " + accessToken
+                let! metadataResponse =
+                    Http.request userDetailsByIdUrl
+                    |> Http.method GET
+                    |> Http.header (Headers.authorization tokenHeader)
+                    |> Http.send
 
-                props.SetAccessToken accessToken
+                JS.console.log("metadataResponse = ", metadataResponse)
+
+                props.SetUserMetadata metadataResponse.responseText
             }
             |> Async.StartImmediate
 
@@ -281,7 +291,7 @@ let private leftSide (model: Model) (dispatch: Msg -> unit) =
                     menuPages "Docs" pagesDocs model dispatch
                     menuPages "About" pagesAbout model dispatch
                 ]
-                Profile ({| SetAccessToken = SetAccessToken >> dispatch |})
+                Profile ({| SetUserMetadata = SetUserMetadata >> dispatch |})
             ]
         ]
     ]
@@ -334,11 +344,11 @@ let private pageLayout (model: Model) (dispatch: Msg -> unit) =
                     Daisy.modal [
                         prop.children [
                             Daisy.modalBox [
-                                match model.UserAccessToken with
+                                match model.UserMetadata with
                                 | "" -> Shared.Spinner ()
                                 | token ->
                                     Html.div [
-                                        Shared.Html.p "The retrieved user token to be used for calling secured API:"
+                                        Shared.Html.p "User's metadata:"
                                         Daisy.alert [
                                             alert.info
                                             prop.children [
