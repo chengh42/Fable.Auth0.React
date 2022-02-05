@@ -7,7 +7,9 @@ open Feliz
 open Feliz.DaisyUI
 
 type Snippet =
-    static member auth0App = """// JS equivalent: <Auth0Provider/>
+    static member auth0App = """open Fable.Auth0.React
+
+// JS equivalent: <Auth0Provider/>
 let auth0App (children: seq<ReactElement>): ReactElement =
     let opts =
         unbox<Auth0ProviderOptions>
@@ -16,7 +18,10 @@ let auth0App (children: seq<ReactElement>): ReactElement =
                redirectUri = "YOUR_REDIRECT_URI_AFTER_LOGGED_IN" |}
     Auth0Provider opts children
 """
-    static member useAuth0 = """// Note that the `useAuth0` hook has to be used in a ReactComponent
+    static member useAuth0 = """open Fable.Core
+open Feliz
+
+// Note that the `useAuth0` hook has to be used in a ReactComponent
 [<ReactComponent>]
 let AuthenticationBox () =
     let ctxAuth0 = useAuth0 ()
