@@ -83,9 +83,9 @@ let View () =
     Html.div [
         Html.p [
             Html.span "This tutorial demonstrates how to make API calls to the "
-            Html.a "Auth0 Management API" "https://auth0.com/docs/api#management-api"
+            Html.a ("Auth0 Management API", "https://auth0.com/docs/api#management-api")
             Html.span ", following the tutorial "
-            Html.a "Auth0 React SDK Quickstarts: Call an API" "https://auth0.com/docs/quickstart/spa/react/02-calling-an-api"
+            Html.a ("Auth0 React SDK Quickstarts: Call an API", "https://auth0.com/docs/quickstart/spa/react/02-calling-an-api")
             Html.span "."
         ]
         Html.p [

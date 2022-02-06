@@ -32,7 +32,7 @@ let View () =
     Html.div [
         Html.p [
             Html.span "Contributions are welcomed! You can find the source code on "
-            Html.a "GitHub repository" "https://github.com/chengh42/Fable.Auth0.React"
+            Html.a ("GitHub repository", "https://github.com/chengh42/Fable.Auth0.React")
             Html.span "."
         ]
         Html.p "For development, run"

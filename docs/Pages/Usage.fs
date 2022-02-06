@@ -82,13 +82,12 @@ let View () =
     Html.div [
         Html.p [
             Html.span "Before adjusting your F# codebase, configure Auth0 for your React application following the tutorial "
-            Html.a "Auth0 React SDK Quickstarts" "https://auth0.com/docs/quickstart/spa/react"
+            Html.a ("Auth0 React SDK Quickstarts", "https://auth0.com/docs/quickstart/spa/react")
             Html.span "."
         ]
         Html.p [
             Html.span "For a working example, see "
             Html.a "https://github.com/chengh42/Fable.Auth0.React/tree/main/docs"
-                "https://github.com/chengh42/Fable.Auth0.React/tree/main/docs"
             Html.span "."
         ]
         Html.h3 "Integrate Auth0 in F# application"

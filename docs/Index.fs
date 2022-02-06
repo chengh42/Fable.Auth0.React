@@ -10,12 +10,14 @@ type Page =
     | Index
     | Usage
     | CallApi
+    | SafeStack
     | Contributing
     | Acknowledgement with
     static member parseUrl (url: string list) =
         match url with
         | [ "usage" ] -> Page.Usage
         | [ "call-api" ] -> Page.CallApi
+        | [ "safe" ] -> Page.SafeStack
         | [ "contributing" ] -> Page.Contributing
         | [ "acknowledgement" ] -> Page.Acknowledgement
         | [ "/" ] | _ -> Page.Index
@@ -25,6 +27,7 @@ type Page =
         | Index -> Url "/", "Installation", Pages.Installation.View ()
         | Usage -> Url "usage", "Basic usage", Pages.Usage.View ()
         | CallApi -> Url "call-api", "Call an API", Pages.CallApi.View ()
+        | SafeStack -> Url "safe", "Using with SAFE stack", Pages.SafeStack.View ()
         | Contributing -> Url "contributing", "Contributing", Pages.Contributing.View ()
         | Acknowledgement -> Url "acknowledgement", "Acknowledgement", Pages.Acknowledgement.View ()
 
@@ -96,10 +99,7 @@ let Profile (props: {| SetUserMetadata: string -> unit |}) =
     let ctxAuth0 = useAuth0 ()
     let username, picture, usersub =
         match ctxAuth0.user with
-        | Some (u: User) ->
-            sprintf "%A" u.name,
-            sprintf "%A" u.picture,
-            sprintf "%A" u.sub
+        | Some (u: User) -> $"{u.name}", $"{u.picture}", $"{u.sub}"
         | None -> "", "", ""
     let userDetailsByIdUrl =
         sprintf "https://dev-nik3xlx8.us.auth0.com/api/v2/users/%s" usersub
@@ -232,7 +232,8 @@ let private leftSide (model: Model) (dispatch: Msg -> unit) =
     let pagesDocs =
         [ Page.Index
           Page.Usage
-          Page.CallApi ]
+          Page.CallApi
+          Page.SafeStack ]
     let pagesAbout =
         [ Page.Contributing
           Page.Acknowledgement ]

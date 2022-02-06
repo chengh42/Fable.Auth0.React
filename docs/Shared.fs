@@ -55,8 +55,14 @@ type Highlight =
 type Html =
     static member inline codeBlock (text: string) =
         Html.code [ prop.className "md-block"; prop.text text ]
-    static member a (text: string) (href: string) =
+    static member a (href: string) =
+        Daisy.link [ link.accent; link.hover; prop.href href; prop.target "_blank"; prop.text href ]
+    static member a (text: string, href: string) =
         Daisy.link [ link.accent; link.hover; prop.href href; prop.target "_blank"; prop.text text ]
+    static member a (linkProps: IReactProperty list, href: string) =
+        Daisy.link (linkProps @ [ prop.href href; prop.text href ])
+    static member a (linkProps: IReactProperty list, text: string, href: string) =
+        Daisy.link (linkProps @ [ prop.href href; prop.text text ])
     static member p (text: string) =
         Html.div [ prop.className "description"; prop.text text ]
     static member p (children :seq<ReactElement>) =
