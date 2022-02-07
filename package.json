@@ -7,7 +7,7 @@
     },
     "devDependencies": {
         "copy-webpack-plugin": "^6.1.0",
-        "css-loader": "^5.2.6",
+        "css-loader": "^5.2.7",
         "file-loader": "^4.2.0",
         "html-webpack-plugin": "^4.5.2",
         "mini-css-extract-plugin": "^0.10.0",
