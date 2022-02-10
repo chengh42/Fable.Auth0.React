@@ -8,7 +8,7 @@
     "devDependencies": {
         "copy-webpack-plugin": "^6.1.0",
         "css-loader": "^5.2.7",
-        "file-loader": "^4.2.0",
+        "file-loader": "^6.2.0",
         "html-webpack-plugin": "^4.5.2",
         "mini-css-extract-plugin": "^1.6.2",
         "remotedev": "^0.2.9",
