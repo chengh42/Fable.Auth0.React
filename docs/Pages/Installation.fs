@@ -25,10 +25,10 @@ let ManualInstallation () =
         Highlight.highlight [
             highlight.language.bash
             prop.text """# using npm
-npm install @auth0/auth0-react
+npm install @auth0/auth0-react@1.9.0
 
 # using yarn
-yarn add @auth0/auth0-react
+yarn add @auth0/auth0-react@1.9.0
 """
         ]
         Html.p "And install nuget package with nuget or paket:"
