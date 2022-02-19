@@ -4,6 +4,7 @@ module Pages.Installation
 open Feliz
 open Shared
 
+[<ReactComponent>]
 let FemtoInstallation () =
     Html.div [
         Html.p [
