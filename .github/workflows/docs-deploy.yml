@@ -1,4 +1,4 @@
-name: CI-deploy
+name: Deploy docs
 
 on:
   workflow_dispatch:
