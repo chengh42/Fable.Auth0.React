@@ -5,7 +5,21 @@ open Feliz
 open Shared
 
 [<ReactComponent>]
-let View () =
+let FemtoInstallation () =
+    Html.div [
+        Html.p [
+            Html.span "The easiest way is to use "
+            Html.a ("Femto CLI", "https://github.com/zaid-ajaj/femto")
+            Html.span ", which will take care of all dependencies including npm libraries."
+        ]
+        Highlight.highlight [
+            highlight.language.bash
+            prop.text """femto install Fable.Auth0.React"""
+        ]
+    ]
+
+[<ReactComponent>]
+let ManualInstallation () =
     Html.div [
         Html.p "Install npm dependencies with npm or yarn:"
         Highlight.highlight [
@@ -27,4 +41,14 @@ Install-Package Fable.Auth0.React
 paket add Fable.Auth0.React
 """
         ]
+    ]
+
+[<ReactComponent>]
+let View () =
+    Html.div [
+        Html.h3 "Using femto"
+        FemtoInstallation ()
+        Html.p [ ]
+        Html.h3 "Manual installation"
+        ManualInstallation ()
     ]
