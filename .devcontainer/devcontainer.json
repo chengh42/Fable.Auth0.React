@@ -1,0 +1,18 @@
+{
+	"image": "mcr.microsoft.com/devcontainers/dotnet:6.0",
+	"features": {
+		"ghcr.io/devcontainers/features/dotnet:1": {},
+		"ghcr.io/devcontainers/features/node:1": {
+            "version": "16"
+        }
+	},
+	"customizations": {
+		"vscode": {
+		    "extensions": [
+                "Ionide.Ionide-fsharp",
+                "EditorConfig.EditorConfig",
+                "ms-dotnettools.csharp"
+            ]
+		}
+	}
+}

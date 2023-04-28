@@ -4,7 +4,7 @@ Fable library for [@auth0/auth0-react](https://github.com/auth0/auth0-react), th
 
 ## Prerequisite
 
-* [.NET 5 SDK](https://dotnet.microsoft.com/download/dotnet/5.0)
+* [.NET 6 SDK](https://dotnet.microsoft.com/download/dotnet/6.0)
 * [Node.js](https://nodejs.org/)
 * [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/) as the package manager
 * [React](https://reactjs.org/) >= 16.8
